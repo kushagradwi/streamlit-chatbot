@@ -170,5 +170,4 @@ if not st.session_state["authenticated"]:
     st.markdown('<div class="footer"></div>', unsafe_allow_html=True)
 
 else:
-    import pages.app as app
-    app.run_app()
+    st.switch_page("app.py")

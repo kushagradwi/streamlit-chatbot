@@ -1,7 +1,4 @@
-# check ig user is logged in
-# else error
+import streamlit as st
 
-# Role Based 
-
-# main-> login 
-# if 200 -> send user info to main and main -> app
+pg = st.navigation([st.Page("login.py"),st.Page("app.py")])
+pg.run()
