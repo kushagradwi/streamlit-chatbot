@@ -17,9 +17,9 @@ def get_base64_font(path):
 
 st.set_page_config(page_title="Review Insights ChatBOT - Login", page_icon="🤖", layout="centered")
 
-logo_base64 = get_base64_image("assets/login/microsoft.png")
-background_base64 = get_base64_image("assets/login/Background.png")
-vystar_logo_base64 = get_base64_image("assets/login/vystar-logo.png")
+logo_base64 = get_base64_image("static/login/microsoft.png")
+background_base64 = get_base64_image("static/login/Background.png")
+vystar_logo_base64 = get_base64_image("static/login/Vystar-logo.png")
 
 poppins_light_base64 = get_base64_font("assets/fonts/Poppins/Poppins-Light.ttf")
 poppins_regular_base64 = get_base64_font("assets/fonts/Poppins/Poppins-Regular.ttf")

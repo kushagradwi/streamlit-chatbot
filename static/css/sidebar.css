@@ -57,19 +57,35 @@ section[data-testid="stSidebar"] a.vy-sidebar-link:hover {
     flex-direction: column;
     gap: 8px;
 }
-[data-testid="stPopoverButton"]{
-    height: 52px;
+.st-key-vy-logout-container{
+    height: 55px;
     background-color: rgba(0, 0, 0,0.2);
     border: 0px;
     padding: 10px 8px;
     display: flex;
     gap: 10px;
     justify-content: flex-start;
-
+    margin-top: auto;
 }
-[data-testid="stPopoverButton"] [data-testid="stIconMaterial"] {
+.st-key-vy-logout-container [data-testid="stMarkdown"] {
+    width: 100% !important;
+   
+}
+.st-key-vy-logout-container [data-testid="stElementContainer"] {
+    width: 100% !important;
+}
+.st-key-vy-logout-container [data-testid="stIconMaterial"] {
     font-size: 2rem;
     
+}
+
+[data-testid="stPopoverButton"]{
+        position: absolute;
+    top: 0;
+    opacity: 0;
+    width: 100%;
+    left: 0;
+    height: 55px;
 }
 [data-testid="stPopoverBody"]{
     background: transparent;
@@ -133,16 +149,18 @@ section[data-testid="stSidebar"] a.vy-sidebar-link:hover {
     height: 100%;
 }
 [data-testid="stVerticalBlockBorderWrapper"]{
-    height: 100%;
+ margin-top: auto;   
 }
 [data-testid="stVerticalBlockBorderWrapper"] > div {
     height: 100%;
 }
 [data-testid="stPopover"]{
-     margin-top: auto; 
+     margin-top: auto;
+     color: transparent; 
 }
 [data-testid="stPopover"] + div {
     height: 36px;
+    color: transparent;
 }
 [data-testid="stSidebar"][aria-expanded="false"] .welcome-wrap{
     display: none;
@@ -156,18 +174,40 @@ section[data-testid="stSidebar"] a.vy-sidebar-link:hover {
 [data-testid="stSidebar"][aria-expanded="false"] .vy-sidebar-link-label{
     display: none;
 }
-[data-testid="stSidebar"][aria-expanded="false"] [data-testid="stPopoverButton"] {
+[data-testid="stSidebar"][aria-expanded="false"] .st-key-vy-logout-container {
     background: none;
 }
-[data-testid="stSidebar"][aria-expanded="false"] [data-testid="stPopoverButton"] [data-testid="stMarkdownContainer"] {
+[data-testid="stSidebar"][aria-expanded="false"] .st-key-vy-logout-container [data-testid="stMarkdownContainer"] {
     display: none;
 }
-[data-testid="stSidebar"][aria-expanded="false"] [data-testid="stPopoverButton"] svg {
+[data-testid="stSidebar"][aria-expanded="false"] .st-key-vy-logout-container svg {
     display: none;
 }
-[data-testid="stSidebar"][aria-expanded="false"] [data-testid="stPopoverButton"] [data-testid="stIconMaterial"]{
+[data-testid="stSidebar"][aria-expanded="false"] .st-key-vy-logout-container [data-testid="stIconMaterial"]{
     padding-left: 5px;
 }
 [data-testid="stSidebar"][aria-expanded="false"] .vy-sidenav-footer{
     display: none;
+}
+.vy-profile-container {
+    display: flex;
+    gap: 7px;
+}
+.vy-profile-image{
+    height: 27px;
+    width: 27px;
+    border: 2px solid white;
+    border-radius: 100%;
+}
+.vy-profile-name{
+    font-size: 12px;
+}
+.vy-profile-email{
+    font-size: 8px;
+}
+.vy-profile-icon{
+    height: 20px;
+    width: 10px;
+    padding-right: 8px;
+    margin-left: auto;
 }

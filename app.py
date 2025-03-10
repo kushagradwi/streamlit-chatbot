@@ -294,27 +294,28 @@ def run_app():
         ,
         unsafe_allow_html=True
         )
-        # st.markdown("""<div class="vy-profile-container">
-        #     <img class="vy-profile-image" src="app/static/landing/user-profile.png" alt="user">
-        #     <div class="vy-profile-info">
-        #         <div class="vy-profile-name">
-        #             John Snow
-        #         </div>
-        #         <div class="vy-profile-email">
-        #             john.snow@gmail.com
-        #         </div>
-        #     </div>
-        #     <div class="vy-profile-icon"><svg xmlns="http://www.w3.org/2000/svg" width="4" height="14" viewBox="0 0 4 14"
-        #             fill="none">
-        #             <path d="M1 7H3M1 1H3M1 13H3" stroke="white" stroke-width="2" stroke-linecap="round"
-        #                 stroke-linejoin="round" />
-        #         </svg></div>
-        # </div>"""
-        #             ,
-        # unsafe_allow_html=True
-        # ) 
-        with st.popover(label="Stephen Johnson", icon=":material/account_circle:", use_container_width=True):
-            logout=st.button(label="Logout", icon=":material/logout:")
+        with st.container(key="vy-logout-container"):
+            st.markdown("""<div class="vy-profile-container">
+                <img class="vy-profile-image" src="app/static/landing/user-profile.png" alt="user">
+                <div class="vy-profile-info">
+                    <div class="vy-profile-name">
+                        John Snow
+                    </div>
+                    <div class="vy-profile-email">
+                        john.snow@gmail.com
+                    </div>
+                </div>
+                <div class="vy-profile-icon"><svg xmlns="http://www.w3.org/2000/svg" width="4" height="14" viewBox="0 0 4 14"
+                        fill="none">
+                        <path d="M1 7H3M1 1H3M1 13H3" stroke="white" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                    </svg></div>
+            </div>"""
+                        ,
+            unsafe_allow_html=True
+            ) 
+            with st.popover(label="", use_container_width=True):
+                logout=st.button(label="Logout")
 
         if logout:
             logout()
