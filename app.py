@@ -2,234 +2,128 @@ import streamlit as st
 import base64
 import time
 from PIL import Image
+import streamlit.components.v1 as components
 
 def get_base64_image(path):
     with open(path, "rb") as image_file:
         return base64.b64encode(image_file.read()).decode("utf-8")
 
-background_base64 = get_base64_image("assets/landing/background.png")
 menu_icon_base64 = get_base64_image("assets/sidenav/menu_icon.png")
 compass_icon_base64 = get_base64_image("assets/sidenav/compas_icon.png")
 
-
+response = {
+  "user_chat_id": "gfds",
+  "query_id": "query_id",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Write a haiku about recursion in programming."
+    },
+    {
+      "role": "assistant",
+      "content": "Recursion is calling the same function internally until a condition is met."
+    },
+    {
+      "role": "user",
+      "content": "What is 2+2"
+    },
+    {
+      "role": "assistant",
+      "content": "2+2 is 4."
+    },
+    {
+      "role": "user",
+      "content": "Give me some response."
+    },
+    {
+      "role": "assistant",
+      "content": "<b>This is the response Heading</b> \n The sample response review content. \n <li>pt1</li> \n <li>pt2</li> \n <li>pt3</li>\n <li>pt4</li> \n The end note of the response"
+    }   
+  ],
+  "response_id": "response_id",
+  "response_txt": "<b>This is the response Heading</b> \n The sample response review content. \n <ul><li>pt1</li> \n <li>pt2</li> \n <li>pt3</li>\n <li>pt4</li></ul> \n The end note of the response",
+  "npb": [
+    {
+      "review_id": "1",
+      "review_text": "random review",
+      "review_date_time": "",
+      "review_src": "GOOGLE",
+      "review_rating": "5"
+    },
+    {
+      "review_id": "2",
+      "review_text": "random review",
+      "review_date_time": "",
+      "review_src": "YAHOO",
+      "review_rating": "5"
+    }
+  ],
+  "suggestions": [
+    "Are there any specific features that users appreciate the most in their reviews?",
+    "How do users describe their overall experience with VyStar Credit Card?",
+    "Do customers mention any downsides or limitations in their reviews?"
+  ]
+}
 
 def logout():
     st.session_state.messages = []  # Clear chat history on logout
+    st.session_state.suggestions = []
     st.session_state.logged_in = False
     st.session_state.redirect = True
     st.rerun()
 
 def newChat():
     st.session_state.messages = []  # Clear chat history
+    st.session_state.suggestions = []
     st.session_state.logged_in = True
     st.rerun()
 
+def apichat(text):
+    return response
+
+def contiueChat(text):
+    if not text:
+        return
+    st.chat_message("user").markdown(text)
+    st.session_state.messages.append({"role": "user", "content": text, "id": len(st.session_state.messages)})
+
+    # Display assistant res in chat message container
+
+    res = apichat(text)
+
+    with st.chat_message("assistant"):
+        st.markdown(res["response_txt"])
+    # Add assistant res to chat history
+    st.session_state.messages.append({"role": "assistant", "content": res["response_txt"], "source": res["npb"],"id": len(st.session_state.messages)})
+    st.session_state.suggestions = res["suggestions"]
+    # st.rerun()
 
 
 def run_app():
     st.set_page_config(layout="wide", initial_sidebar_state="collapsed")
     with open("static/css/sidebar.css") as css_file:
         st.html(f"<style>{css_file.read()}</style>")
-    st.markdown(
-        f"""
-        <style>
-            @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap');
 
-            body, html, .stApp {{
-                font-family: 'Poppins', sans-serif;
-                background: url(data:image/png;base64,{background_base64}) no-repeat center center fixed;
-                background-size: cover;
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-                color: white;
-            }}
-            #hi-how-can-i-assist-you-today{{
-                margin-top: 60px;
-            }}
-            [data-testid="stMain"]{{
-                height: 100%;
-            }}
-            [data-testid="stMainBlockContainer"] {{
-                padding-top: 9px;
-                padding-left: 25px; 
-                padding-bottom: 20px;
-                height: 100%;
-            }}
-            .info-box-wrap {{
-                margin-top: 123px;
-                display: flex;
-                justify-content: center;
-            }}
-            .styled-input-container-wrap{{
-                display: flex;
-                justify-content: center;
-                flex-direction: column;
-                align-items: center;
-            }}
-            .stAppHeader {{
-                display: none;
-            }}
-            footer {{
-                visibility: hidden;
-            }}
-            .stAppHeader {{
-                display: none;
-            }}
-            footer {{
-                visibility: hidden;
-            }}
-            
-            .stAppHeader {{ display: none; }}
-            footer {{ visibility: hidden; }}
-            
-            [data-testid="stBaseButton-headerNoPadding"] svg {{
-                display: none;
-            }}
-            [data-testid="stBaseButton-headerNoPadding"] {{
-                background: url("app/static/landing/menu_icon.png") no-repeat center center;
-            }}
-            
-            h1 {{
-                color: #002C6C !important;
-                text-align: center;
-
-            }}
-            
-            .stChatInputContainer textarea {{
-                height: 150px !important;
-            }}
-            .stChatMessage {{
-                background: none !important;
-            }}
-            div[data-testid="stBottomBlockContainer"] {{
-                display: none !important;
-            }}
-            /* Styled Input Box */
-            .styled-input-container {{
-                width: 874px;
-                height: 52px;
-                padding: 10px;
-                background: #FEFEFE;
-                box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.15);
-                border-radius: 8px;
-                border-bottom: 2px #006EF5 solid;
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-top: 20px;
-            }}
-            .styled-input {{
-                width: 100%;
-                height: 100%;
-                border: none;
-                outline: none;
-                font-size: 14px;
-                font-family: 'Poppins', sans-serif;
-                padding-left: 10px;
-                background: transparent;
-                color: #000;
-            }}
-            .info-box {{
-                width: 823px;
-                height: 138px;
-                padding: 20px 63px;
-                background: rgba(255, 255, 255, 0.64);
-                box-shadow: 0px 2px 7px rgba(0, 0, 0, 0.15);
-                border-radius: 7px;
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                align-items: flex-start;
-                gap: 5px;
-            }}
-            /* Send Icon */
-            .send-icon {{
-                width: 32px;
-                height: 32px;
-                cursor: pointer;
-                margin-right: 10px;
-            }}
-            .send-button {{
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                cursor: pointer;
-                border: none;
-                background: none;
-                outline: none;
-            }}
-            .model-info {{
-            width: 283px;
-            height: 41px;
-            padding: 4px 10px;
-            background: rgba(134, 134, 134, 0.10);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin: 20px auto;
-        }}
-        .model-info svg {{
-            width: 30px;
-            height: 31px;
-        }}
-        .model-text-container {{
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: flex-start;
-        }}
-        .model-name {{
-            color: #212121;
-            font-size: 12px;
-            font-family: Poppins;
-            font-weight: 400;
-        }}
-        .model-training {{
-            color: #868686;
-            font-size: 10px;
-            font-family: Poppins;
-            font-weight: 400;
-        }}
-        .model-training strong {{
-            font-weight: 700;
-        }}
-        .model-info {{
-            position: absolute;
-            top: 0px;
-            left: 0px;
-            width: 283px;
-            height: 41px;
-            padding: 17px 10px;
-            background: rgba(134, 134, 134, 0.1);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }}
-        .model-info svg {{
-            width: 30px;
-            height: 31px;
-        }}
-        .model-text-container {{
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: flex-start;
-        }}
-        .model-name {{
-            color: #212121;
-            font-size: 12px;
-            font-family: Poppins;
-            font-weight: 400;
-        }}
-        
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
+    with open("static/css/app.css") as app_css_file:
+        st.html(f"<style>{app_css_file.read()}</style>")
     
+    html_string = '''
+    <script>
+    window.top.document.addEventListener("click", (e) => {
+    if (e.target.closest(".st-key-vy-suggestion-state-button-group")) {
+        const $button = e.target.closest("[data-testid='stBaseButton-secondary']");
+        const $input = window.top.document.querySelector(
+        "[data-testid='stChatInputTextArea']"
+        );
+        $input.value = $button.textContent.trim();
+        $input.dispatchEvent(new Event('input', { bubbles: true })); 
+    }
+    });
+    </script>
+    '''
+
+    components.html(html_string)
+
     st.markdown(
     """
         <div style="padding-left: 10px; padding-right: 10px; padding-top: 17px; padding-bottom: 17px; background: rgba(134, 134, 134, 0.10); border-radius: 12px; flex-direction: column; justify-content: center; align-items: flex-start; gap: 2px; display: inline-flex">
@@ -244,7 +138,7 @@ def run_app():
                     <div style="
                         font-size: 10px;
                         line-height: 10px;
-                    "><span style="color: #868686; font-size: 10px; font-family: Poppins; font-weight: 400; word-wrap: break-word">Trained on last 12 months of data till </span><span style="color: #868686; font-size: 10px; font-family: Poppins; font-weight: 700; word-wrap: break-word">Feb 2025</span></div>
+                    "><span style="color: #868686; font-size: 10px; font-family: Poppins; font-weight: 400; word-wrap: break-word">Trained on last 2 months of data till </span><span style="color: #868686; font-size: 10px; font-family: Poppins; font-weight: 700; word-wrap: break-word">Dec 2024</span></div>
                 </div>
             </div>
         </div>
@@ -260,6 +154,9 @@ def run_app():
     # Initialize session state variables
     if "messages" not in st.session_state:
         st.session_state.messages = []
+
+    if "suggestions" not in st.session_state:
+        st.session_state.suggestions = []
     
     # Sidebar with logout button
     with st.sidebar:
@@ -317,9 +214,9 @@ def run_app():
             unsafe_allow_html=True
             ) 
             with st.popover(label="", use_container_width=True):
-                logout=st.button(label="Logout")
+                logoutButton=st.button(label="Logout")
 
-        if logout:
+        if logoutButton:
             logout()
 
         st.markdown("""<div class="vy-sidenav-footer">
@@ -329,74 +226,108 @@ def run_app():
                 </div>
             </div>""",
             unsafe_allow_html=True)
-
-         
-            
-            
     
     # Display welcome message if no chat history exists
     if not st.session_state.messages:
         st.markdown("<h1>Hi! How can I assist you today?</h1>", unsafe_allow_html=True)
 
+    # Display chat messages from history on app rerun
+    with st.container(key="vy-chat-msg-container"):
+        for message in st.session_state.messages:
+            if message["role"] == "user":
+                with st.chat_message(name=message["role"],avatar="static/landing/user-profile.png"):
+                    st.markdown(message["content"],unsafe_allow_html=True)
+            else:
+                with st.chat_message(name=message["role"],avatar="assets/sidenav/compas_icon.png"):
+                    st.markdown(message["content"],unsafe_allow_html=True)
+                with st.expander("source",icon=":material/anchor:"):
+                    st.html("""<div class="vy-source-main-header">Source citation</div>""")
+                    for msg in message["source"]:
+                        st.markdown("""<div class="vy-source-citation">
+                            <div class="vy-source-citation-header-container">
+                                <div class="vy-source-citation-header">
+                                    Google
+                                </div>
+                                <div class="vy-source-citation-rating">
+                                    Rating 5
+                                </div>
+                                <div class="vy-source-citation-date">
+                                    Updated 23/12/24
+                                </div>
+                            </div>
+                            <div class="vy-source-citation-info">
+                                Great for travel redemptions, but the introductory APR period could be longer.
+                            </div>
+                        </div>""",unsafe_allow_html=True)
+                sentiment_mapping = [":material/thumb_down:", ":material/thumb_up:"]
+                with st.container(key=f"vy-chat-msg-container-thumbs-{message['id']}"):
+                    selected = st.feedback("thumbs",key=f"{message['id']}-thumbs")
+                    if selected is not None:
+                       pass
+
+        if st.session_state.suggestions:
+            with st.container(key="vy-suggestion-state"):
+                st.html('<div class="vy-suggestion-container">Here are some suggestion to help you know more!</div>')
+                with st.container(key="vy-suggestion-state-button-group"):
+                    for sug in st.session_state.suggestions:
+                        if st.button(label=sug,key=f"{sug}"):
+                            contiueChat(sug)
+                            st.rerun()                    
+    
+    if not st.session_state.messages:
+        with st.container(key="vy-chat-container"):
+            if text := st.text_input(label="", placeholder="You can ask me more...", key="vy-chat-input-up"):
+                contiueChat(text)
+                st.rerun()
+            def process_input(text):
+                    contiueChat(text)
+            if st.button(label="", icon=":material/send:", on_click=process_input, args=(text,)):
+                pass
+            st.markdown("""<div class="vy-chat-info">VAI can make mistakes. Check important information.</div>""",unsafe_allow_html=True)
+            
+
     # Styled Input Box with Send Icon
-    st.markdown(
-        """
-        <div class="styled-input-container-wrap">
-        <div class="styled-input-container">
-            <input class="styled-input" type="text" placeholder="You can ask me anything" id="user-input"/>
-            <button class="send-button" onclick="sendMessage()">
-                <svg class="send-icon" width="32" height="33" viewBox="0 0 32 33" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M10.0296 9.09627C9.84587 8.37965 10.5514 7.76756 11.1933 8.0868L25.5253 15.2152C26.1582 15.53 26.1582 16.47 25.5253 16.7848L11.1933 23.9132C10.5515 24.2324 9.84587 23.6204 10.0296 22.9037L11.7999 16L10.0296 9.09627ZM12.7013 16.5216L11.089 22.8093L24.7794 16L11.089 9.19074L12.7013 15.4784H20.1673C20.4434 15.4784 20.6673 15.7119 20.6673 16C20.6673 16.2881 20.4434 16.5216 20.1673 16.5216H12.7013Z" fill="#006EF5"/>
-                </svg>
-            </button>
-        </div>
-        <div style="width: 874px; padding-top: 16px; position: relative; color: #868686; font-size: 12px; font-family: Poppins; font-weight: 400; word-wrap: break-word">VAI can make mistakes. Check important information.</div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    # st.markdown(
+    #     """
+    #     <div class="styled-input-container-wrap">
+    #     <div class="styled-input-container">
+    #         <input class="styled-input" type="text" placeholder="You can ask me anything" id="user-input"/>
+    #         <button class="send-button" onclick="sendMessage()">
+    #             <svg class="send-icon" width="32" height="33" viewBox="0 0 32 33" fill="none" xmlns="http://www.w3.org/2000/svg">
+    #                 <path d="M10.0296 9.09627C9.84587 8.37965 10.5514 7.76756 11.1933 8.0868L25.5253 15.2152C26.1582 15.53 26.1582 16.47 25.5253 16.7848L11.1933 23.9132C10.5515 24.2324 9.84587 23.6204 10.0296 22.9037L11.7999 16L10.0296 9.09627ZM12.7013 16.5216L11.089 22.8093L24.7794 16L11.089 9.19074L12.7013 15.4784H20.1673C20.4434 15.4784 20.6673 15.7119 20.6673 16C20.6673 16.2881 20.4434 16.5216 20.1673 16.5216H12.7013Z" fill="#006EF5"/>
+    #             </svg>
+    #         </button>
+    #     </div>
+    #     <div style="width: 874px; padding-top: 16px; position: relative; color: #868686; font-size: 12px; font-family: Poppins; font-weight: 400; word-wrap: break-word">VAI can make mistakes. Check important information.</div>
+    #     </div>
+    #     """,
+    #     unsafe_allow_html=True
+    # )
 
+    if st.session_state.messages:
+        if prompt := st.chat_input("You can ask me more..."):
+            contiueChat(text=prompt)
+            st.rerun()
+            
 
-    st.markdown(
-        """
-        <div class="info-box-wrap">
-        <div class="info-box">
-            <div>
-                <div style="text-align: center; color: #5E6670; font-size: 14px; font-family: Poppins; font-weight: 600;">
-                    VyStar AI (VAI) – Payment Review Insights
-                </div>
-                <div style="text-align: center; color: #5E6670; font-size: 12px; font-family: Poppins; font-weight: 400;">
-                    VAI focuses exclusively on payment-related reviews, providing insights into credit cards, debit cards, ACH, Zelle, and ATM services. It helps track customer sentiment, and highlight key feedback, enabling you to improve VyStar’s payment products and enhance user experience.
+    if not st.session_state.messages:
+        st.markdown(
+            """
+            <div class="info-box-wrap">
+            <div class="info-box">
+                <div>
+                    <div style="text-align: center; color: #5E6670; font-size: 14px; font-family: Poppins; font-weight: 600;">
+                        VyStar AI (VAI) – Payment Review Insights
+                    </div>
+                    <div style="text-align: center; color: #5E6670; font-size: 12px; font-family: Poppins; font-weight: 400;">
+                        VAI focuses exclusively on payment-related reviews, providing insights into credit cards, debit cards, ACH, Zelle, and ATM services. It helps track customer sentiment, and highlight key feedback, enabling you to improve VyStar’s payment products and enhance user experience.
+                    </div>
                 </div>
             </div>
-        </div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-    st.markdown("""<div style="padding-top: 60px; text-align: center;  bottom: 20px; width: 100%; opacity: 0.54; color: #006EF5; font-size: 10px; font-family: Poppins; font-weight: 400; word-wrap: break-word">© 2025 Vystar, Incorporated and its Affiliates. All Rights Reserved</div>""",unsafe_allow_html=True)
-    
-
-    if "chat_input" in st.session_state and st.session_state.chat_input:
-        prompt = st.session_state.chat_input
-        st.session_state.chat_input = ""
-
-        # Display user message
-        with st.chat_message("user"):
-            st.markdown(prompt)
-
-        # Add user message to chat history
-        st.session_state.messages.append({"role": "user", "content": prompt})
-
-        # Echo Bot repeats the input
-        response = f"🔁 {prompt}"
-
-        # Display assistant response
-        with st.chat_message("assistant"):
-            st.markdown(response)
-
-        st.session_state.messages.append({"role": "assistant", "content": response})
-
-        st.rerun()
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+    # st.markdown("""<div style="text-align: center;  bottom: 20px; width: 100%; opacity: 0.54; color: #006EF5; font-size: 10px; font-family: Poppins; font-weight: 400; word-wrap: break-word">© 2025 Vystar, Incorporated and its Affiliates. All Rights Reserved</div>""",unsafe_allow_html=True)
 
 run_app()
