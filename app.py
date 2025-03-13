@@ -58,7 +58,7 @@ def contiueChat(text):
     # Add assistant res to chat history
     st.session_state.messages.append({"role": "assistant", "content": res["response_txt"], "source": res["npb"],"id": len(st.session_state.messages)})
     st.session_state.suggestions = res["suggestions"]
-    # st.rerun()
+    st.rerun()
 
 
 def run_app():

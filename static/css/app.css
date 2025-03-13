@@ -87,6 +87,7 @@ h1 {
 }
 .stChatMessage {
   background: none !important;
+  color: #000;
 }
 /* Styled Input Box */
 .styled-input-container {
@@ -323,6 +324,13 @@ h1 {
   max-width: 874px;
   margin: 0 auto;
 }
+.st-key-vy-chat-msg-container [data-testid="stChatMessage"]{
+  display: flex;
+}
+[data-testid="stChatMessage"]{
+  display: none;
+}
+
 
 [data-testid="stChatMessage"]:has([alt="user avatar"]) {
   flex-direction: row-reverse;
@@ -337,6 +345,12 @@ h1 {
   color: white;
   flex-grow: 0;
   margin: initial;
+}
+[data-testid="stChatMessage"]:has([alt="assistant avatar"])
+  [data-testid="stChatMessageContent"] {
+  
+  color: black;
+  
 }
 
 [data-testid="stChatMessage"]:has([alt="user avatar"])
