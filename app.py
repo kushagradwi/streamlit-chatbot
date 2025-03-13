@@ -58,7 +58,7 @@ def contiueChat(text):
     # Add assistant res to chat history
     st.session_state.messages.append({"role": "assistant", "content": res["response_txt"], "source": res["npb"],"id": len(st.session_state.messages)})
     st.session_state.suggestions = res["suggestions"]
-    # st.rerun()
+    st.rerun()
 
 
 def run_app():
@@ -234,13 +234,11 @@ def run_app():
                     for sug in st.session_state.suggestions:
                         if st.button(label=sug,key=f"{sug}"):
                             contiueChat(sug)
-                            st.rerun()                    
     
     if not st.session_state.messages:
         with st.container(key="vy-chat-container"):
             if text := st.text_input(label="", placeholder="You can ask me more...", key="vy-chat-input-up"):
                 contiueChat(text)
-                st.rerun()
             def process_input(text):
                     contiueChat(text)
             if st.button(label="", icon=":material/send:", on_click=process_input, args=(text,)):
@@ -269,7 +267,6 @@ def run_app():
     if st.session_state.messages:
         if prompt := st.chat_input("You can ask me more..."):
             contiueChat(text=prompt)
-            st.rerun()
             
 
     if not st.session_state.messages:
