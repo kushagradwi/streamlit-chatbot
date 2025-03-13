@@ -320,6 +320,27 @@ h1 {
 }
 
 /* chat message */
+
+[data-testid="stChatMessageContent"] {
+  display: none;
+}
+
+[alt="assistant avatar"] + [data-testid="stChatMessageContent"] {
+  display: block;
+}
+
+[alt="user avatar"] + [data-testid="stChatMessageContent"] {
+  display: block;
+}
+
+[data-testid="stChatMessageAvatarUser"] {
+  display: none;
+}
+
+[data-testid="stChatMessageAvatarAssistant"] {
+  display: none;
+}
+
 .st-key-vy-chat-msg-container {
   max-width: 874px;
   margin: 0 auto;
