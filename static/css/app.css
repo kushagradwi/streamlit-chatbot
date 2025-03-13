@@ -223,6 +223,7 @@ h1 {
   box-shadow: 0px 2px 7px 0px rgba(0, 0, 0, 0.15);
   border-bottom: 2px solid #006ef5;
   border-radius: 8px;
+  width: 100%;
 }
 
 .st-key-vy-chat-container input.st-be {
@@ -231,6 +232,7 @@ h1 {
 
 .st-key-vy-chat-container [data-testid="stButton"] {
   background-color: transparent;
+  width: auto !important;
 }
 
 .st-key-vy-chat-container input {
@@ -248,6 +250,7 @@ h1 {
 
 .st-key-vy-chat-container > div:first-child {
   flex-grow: 1;
+  width: 100%;
 }
 .st-key-vy-chat-container > div:last-child {
   width: 100%;
@@ -259,6 +262,7 @@ h1 {
   position: absolute;
   top: 4px;
   right: 4px;
+  width: auto;
 }
 .st-key-vy-chat-container > div:nth-child(2)::after {
   content: "";
@@ -515,7 +519,6 @@ div[class*="st-key-vy-chat-msg-container-thumbs"]
   [data-testid="stBaseButton-borderlessIconActive"]:last-child
   > span {
   background: #e69642;
-  
 }
 
 div[class*="st-key-vy-chat-msg-container-thumbs"]
@@ -663,7 +666,7 @@ div[class*="st-key-vy-chat-msg-container-thumbs"]
 }
 
 .st-key-vy-suggestion-state-button-group [data-testid="stButton"] {
-  width: 262px;
+  width: 262px !important;
   height: 36px;
   position: relative;
 }
@@ -671,6 +674,7 @@ div[class*="st-key-vy-chat-msg-container-thumbs"]
 /* input below */
 [data-testid="stChatInput"] {
   max-width: 874px;
+  width: 100%;
   margin: auto;
   border-radius: 8px;
   border-bottom: 2px solid #006ef5;
@@ -690,7 +694,9 @@ div[class*="st-key-vy-chat-msg-container-thumbs"]
   font-size: 12px;
   font-style: normal;
   font-weight: 400;
-  line-height: normal;
+  line-height: 25px;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 [data-testid="stChatInput"] > div {
@@ -712,7 +718,16 @@ div[class*="st-key-vy-chat-msg-container-thumbs"]
   background: #fefefe;
 }
 
+[data-testid="stBottomBlockContainer"] > div > div > div {
+  width: 100%;
+}
+
+[data-testid="stBottomBlockContainer"] > div > div > div > div {
+  width: 100%;
+}
+
 [data-testid="stBottom"] [data-baseweb="textarea"] {
+  width: 100%;
   border: 0;
 }
 

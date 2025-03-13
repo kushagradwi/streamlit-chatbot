@@ -1,0 +1,53 @@
+{
+  "user_chat_id": "gfds",
+  "query_id": "query_id",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Write a haiku about recursion in programming."
+    },
+    {
+      "role": "assistant",
+      "content": "Recursion is calling the same function internally until a condition is met."
+    },
+    {
+      "role": "user",
+      "content": "What is 2+2"
+    },
+    {
+      "role": "assistant",
+      "content": "2+2 is 4."
+    },
+    {
+      "role": "user",
+      "content": "Give me some response."
+    },
+    {
+      "role": "assistant",
+      "content": "<b>This is the response Heading</b> \n The sample response review content. \n <li>pt1</li> \n <li>pt2</li> \n <li>pt3</li>\n <li>pt4</li> \n The end note of the response"
+    }
+  ],
+  "response_id": "response_id",
+  "response_txt": "<b>This is the response Heading</b> \n The sample response review content. \n <ul><li>pt1</li> \n <li>pt2</li> \n <li>pt3</li>\n <li>pt4</li></ul> \n The end note of the response",
+  "npb": [
+    {
+      "review_id": "1",
+      "review_text": "random review",
+      "review_date_time": "",
+      "review_src": "GOOGLE",
+      "review_rating": "5"
+    },
+    {
+      "review_id": "2",
+      "review_text": "random review",
+      "review_date_time": "",
+      "review_src": "YAHOO",
+      "review_rating": "5"
+    }
+  ],
+  "suggestions": [
+    "Are there any specific features that users appreciate the most in their reviews?",
+    "How do users describe their overall experience with VyStar Credit Card?",
+    "Do customers mention any downsides or limitations in their reviews?"
+  ]
+}

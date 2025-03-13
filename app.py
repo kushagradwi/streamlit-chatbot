@@ -3,6 +3,7 @@ import base64
 import time
 from PIL import Image
 import streamlit.components.v1 as components
+import requests
 
 def get_base64_image(path):
     with open(path, "rb") as image_file:
@@ -10,60 +11,6 @@ def get_base64_image(path):
 
 menu_icon_base64 = get_base64_image("assets/sidenav/menu_icon.png")
 compass_icon_base64 = get_base64_image("assets/sidenav/compas_icon.png")
-
-response = {
-  "user_chat_id": "gfds",
-  "query_id": "query_id",
-  "messages": [
-    {
-      "role": "user",
-      "content": "Write a haiku about recursion in programming."
-    },
-    {
-      "role": "assistant",
-      "content": "Recursion is calling the same function internally until a condition is met."
-    },
-    {
-      "role": "user",
-      "content": "What is 2+2"
-    },
-    {
-      "role": "assistant",
-      "content": "2+2 is 4."
-    },
-    {
-      "role": "user",
-      "content": "Give me some response."
-    },
-    {
-      "role": "assistant",
-      "content": "<b>This is the response Heading</b> \n The sample response review content. \n <li>pt1</li> \n <li>pt2</li> \n <li>pt3</li>\n <li>pt4</li> \n The end note of the response"
-    }   
-  ],
-  "response_id": "response_id",
-  "response_txt": "<b>This is the response Heading</b> \n The sample response review content. \n <ul><li>pt1</li> \n <li>pt2</li> \n <li>pt3</li>\n <li>pt4</li></ul> \n The end note of the response",
-  "npb": [
-    {
-      "review_id": "1",
-      "review_text": "random review",
-      "review_date_time": "",
-      "review_src": "GOOGLE",
-      "review_rating": "5"
-    },
-    {
-      "review_id": "2",
-      "review_text": "random review",
-      "review_date_time": "",
-      "review_src": "YAHOO",
-      "review_rating": "5"
-    }
-  ],
-  "suggestions": [
-    "Are there any specific features that users appreciate the most in their reviews?",
-    "How do users describe their overall experience with VyStar Credit Card?",
-    "Do customers mention any downsides or limitations in their reviews?"
-  ]
-}
 
 def logout():
     st.session_state.messages = []  # Clear chat history on logout
@@ -79,6 +26,21 @@ def newChat():
     st.rerun()
 
 def apichat(text):
+    try:
+        response = requests.get(
+            "http://localhost:8501/app/static/response.json",
+            headers={"Content-Type": "application/json"}
+        )
+ 
+        # Check if the response is successful
+        if response.status_code == 200:
+            return response.json()  # Return the JSON response
+        else:
+            st.error(f"Error: {response.status_code} - {response.text}")
+            return None
+    except requests.exceptions.RequestException as e:
+        st.error(f"Request failed: {e}")
+        return None
     return response
 
 def contiueChat(text):
