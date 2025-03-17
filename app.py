@@ -1,9 +1,26 @@
 import streamlit as st
 import base64
 import time
+import json
 from PIL import Image
 import streamlit.components.v1 as components
 import requests
+from api_helper import get_api_call_with_cookie, post_api_call_with_cookie
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+BASE_URL=os.getenv("BASE_URL")
+DISCLAIMER_ENDPOINT=os.getenv("DISCLAIMER_ENDPOINT")
+NEW_CHAT_ENDPOINT=os.getenv("NEW_CHAT_ENDPOINT")
+RECENT_CHATS_ENDPOINT=os.getenv("RECENT_CHATS_ENDPOINT")
+FETCH_CHAT_ENDPOINT=os.getenv("FETCH_CHAT_ENDPOINT")
+CHAT_RESPONSE_ENDPOINT=os.getenv("CHAT_RESPONSE_ENDPOINT")
+RECORD_FEEDBACK_ENDPOINT=os.getenv("RECORD_FEEDBACK_ENDPOINT")
+
+
+
 
 def get_base64_image(path):
     with open(path, "rb") as image_file:
@@ -11,6 +28,9 @@ def get_base64_image(path):
 
 menu_icon_base64 = get_base64_image("assets/sidenav/menu_icon.png")
 compass_icon_base64 = get_base64_image("assets/sidenav/compas_icon.png")
+
+
+
 
 def logout():
     st.session_state.messages = []  # Clear chat history on logout
@@ -23,41 +43,90 @@ def newChat():
     st.session_state.messages = []  # Clear chat history
     st.session_state.suggestions = []
     st.session_state.logged_in = True
+    #call new chat API
+    url = f"{BASE_URL}{NEW_CHAT_ENDPOINT}"
+    response = post_api_call_with_cookie(url)
+    
+    if isinstance(response, dict) and "user_chat_id" in response:
+        st.session_state.CHAT_ID = response.get("user_chat_id", "")
+        st.session_state.USER_ID = response.get("user_id", "")  # Store user_id
+    else:
+        st.error("Failed to create new chat.")
     st.rerun()
 
-def apichat(text):
+def apichat( text):
     try:
-        response = requests.get(
-            "http://localhost:8501/app/static/response.json",
-            headers={"Content-Type": "application/json"}
-        )
- 
-        # Check if the response is successful
-        if response.status_code == 200:
-            return response.json()  # Return the JSON response
-        else:
-            st.error(f"Error: {response.status_code} - {response.text}")
+        url = CHAT_RESPONSE_ENDPOINT  # Use the endpoint from .env
+        user_chat_id = st.session_state.get("CHAT_ID", None)
+        user_id = "user-1"  # Retrieve user_id
+
+        if not user_id:
+            st.error("User ID is missing.")
             return None
-    except requests.exceptions.RequestException as e:
+        
+        headers = {
+            "accept": "application/json",
+            "api-key": "884c0b4e-ecc2-44a7-bbbd-39835aec2518",
+            "Content-Type": "application/json"
+        }
+        
+        payload = {
+            "user_id": user_id,
+            "user_chat_id": user_chat_id,
+            "messages": [
+                {"role": "user", "content": text}
+            ]
+        }
+
+        response = post_api_call_with_cookie(url, headers=headers, payload=json.dumps(payload))
+
+        if isinstance(response, str) and response.startswith("Error!"):
+            st.error(response)
+            return None
+        
+        return response  # Returns the chatbot's response JSON
+
+    except Exception as e:
         st.error(f"Request failed: {e}")
         return None
-    return response
 
-def contiueChat(text):
+def continueChat(text):
     if not text:
         return
+    
+    user_id = "user-1"  # Retrieve user_id
+    if not user_id:
+        st.error("User ID is missing.")
+        return
+
+    # Display the user's message in the chat interface
     st.chat_message("user").markdown(text)
     st.session_state.messages.append({"role": "user", "content": text, "id": len(st.session_state.messages)})
 
-    # Display assistant res in chat message container
-
+    # Get chatbot response
     res = apichat(text)
 
+    # Error handling in case API response fails
+    if res is None or "response_txt" not in res:
+        st.error("Failed to get a response from the chatbot.")
+        return
+
+    # Display assistant response in chat message container
     with st.chat_message("assistant"):
         st.markdown(res["response_txt"])
-    # Add assistant res to chat history
-    st.session_state.messages.append({"role": "assistant", "content": res["response_txt"], "source": res["npb"],"id": len(st.session_state.messages)})
-    st.session_state.suggestions = res["suggestions"]
+
+    # Add assistant response to chat history
+    st.session_state.messages.append({
+        "role": "assistant", 
+        "content": res["response_txt"], 
+        "source": res.get("npb", ""), 
+        "id": len(st.session_state.messages)
+    })
+    
+    # Update session state with suggestions if available
+    st.session_state.suggestions = res.get("suggestions", [])
+
+    # Rerun the app to refresh the chat interface
     st.rerun()
 
 
@@ -119,6 +188,9 @@ def run_app():
 
     if "suggestions" not in st.session_state:
         st.session_state.suggestions = []
+    
+    if "CHAT_ID" not in st.session_state:
+        st.session_state.CHAT_ID = ""    
     
     # Sidebar with logout button
     with st.sidebar:
@@ -233,14 +305,14 @@ def run_app():
                 with st.container(key="vy-suggestion-state-button-group"):
                     for sug in st.session_state.suggestions:
                         if st.button(label=sug,key=f"{sug}"):
-                            contiueChat(sug)
+                            continueChat(sug)
     
     if not st.session_state.messages:
         with st.container(key="vy-chat-container"):
             if text := st.text_input(label="", placeholder="You can ask me more...", key="vy-chat-input-up"):
-                contiueChat(text)
+                continueChat(text)
             def process_input(text):
-                    contiueChat(text)
+                    continueChat(text)
             if st.button(label="", icon=":material/send:", on_click=process_input, args=(text,)):
                 pass
             st.markdown("""<div class="vy-chat-info">VAI can make mistakes. Check important information.</div>""",unsafe_allow_html=True)
@@ -266,7 +338,7 @@ def run_app():
 
     if st.session_state.messages:
         if prompt := st.chat_input("You can ask me more..."):
-            contiueChat(text=prompt)
+            continueChat(text=prompt)
             
 
     if not st.session_state.messages:
