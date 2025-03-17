@@ -18,6 +18,7 @@ RECENT_CHATS_ENDPOINT=os.getenv("RECENT_CHATS_ENDPOINT")
 FETCH_CHAT_ENDPOINT=os.getenv("FETCH_CHAT_ENDPOINT")
 CHAT_RESPONSE_ENDPOINT=os.getenv("CHAT_RESPONSE_ENDPOINT")
 RECORD_FEEDBACK_ENDPOINT=os.getenv("RECORD_FEEDBACK_ENDPOINT")
+API_KEY=os.getenv("API_KEY")
 
 
 
@@ -46,7 +47,7 @@ def newChat():
     #call new chat API
     url = f"{BASE_URL}{NEW_CHAT_ENDPOINT}"
     response = post_api_call_with_cookie(url)
-    
+    print("Response :",response)
     if isinstance(response, dict) and "user_chat_id" in response:
         st.session_state.CHAT_ID = response.get("user_chat_id", "")
         #st.session_state.USER_ID = response.get("user_id", "")  # Store user_id
@@ -54,10 +55,35 @@ def newChat():
         st.error("Failed to create new chat.")
     st.rerun()
 
+# Function to send feedback using post_api_call_with_cookie
+def sendFeedback(helpful):
+    url = f"{BASE_URL}{RECORD_FEEDBACK_ENDPOINT}"
+    payload = json.dumps({
+        "user_id": "user-1",
+        "user_chat_id": "user-1_chat2",
+        "query_id": "query_1234",
+        "response_id": "response_1234",
+        "helpful": helpful
+    })
+    headers = {
+        "accept": "application/json",
+        "api-key": "884c0b4e-ecc2-44a7-bbbd-39835aec2518",
+        "Content-Type": "application/json"
+    }
+
+    # Making the API call using the helper function
+    response = post_api_call_with_cookie(url, headers=headers, payload=payload)
+    print("Feedback :",response)
+    # Handling the response
+    if isinstance(response, str) and "Error!" in response:
+        st.error(response)  # Show error message in Streamlit
+    else:
+        st.success("Feedback recorded successfully!")  # Success message
+
 def apichat( text):
     try:
         url = BASE_URL+ CHAT_RESPONSE_ENDPOINT  # Use the endpoint from .env
-        user_chat_id = st.session_state.get("CHAT_ID", None)
+        user_chat_id = "user-1-chat1"
         user_id = "user-1"  # Retrieve user_id
 
         if not user_id:
@@ -79,6 +105,8 @@ def apichat( text):
         }
 
         response = post_api_call_with_cookie(url, headers=headers, payload=json.dumps(payload))
+
+        print(response["response_txt"])
 
         if isinstance(response, str) and response.startswith("Error!"):
             st.error(response)
@@ -105,7 +133,7 @@ def continueChat(text):
 
     # Get chatbot response
     res = apichat(text)
-
+    
     # Error handling in case API response fails
     if res is None or "response_txt" not in res:
         st.error("Failed to get a response from the chatbot.")
@@ -119,7 +147,7 @@ def continueChat(text):
     st.session_state.messages.append({
         "role": "assistant", 
         "content": res["response_txt"], 
-        "source": res.get("npb", ""), 
+        "source": res.get("cited_reviews", ""), 
         "id": len(st.session_state.messages)
     })
     
@@ -277,27 +305,30 @@ def run_app():
                 with st.expander("source",icon=":material/anchor:"):
                     st.html("""<div class="vy-source-main-header">Source citation</div>""")
                     for msg in message["source"]:
-                        st.markdown("""<div class="vy-source-citation">
+                        st.markdown(f"""<div class="vy-source-citation">
                             <div class="vy-source-citation-header-container">
                                 <div class="vy-source-citation-header">
-                                    Google
+                                    {msg["review_src"]}
                                 </div>
                                 <div class="vy-source-citation-rating">
                                     Rating 5
                                 </div>
                                 <div class="vy-source-citation-date">
-                                    Updated 23/12/24
+                                    Updated {msg["review_date_time"]}
                                 </div>
                             </div>
                             <div class="vy-source-citation-info">
-                                Great for travel redemptions, but the introductory APR period could be longer.
+                                {msg["review_text"]}
                             </div>
                         </div>""",unsafe_allow_html=True)
                 sentiment_mapping = [":material/thumb_down:", ":material/thumb_up:"]
                 with st.container(key=f"vy-chat-msg-container-thumbs-{message['id']}"):
                     selected = st.feedback("thumbs",key=f"{message['id']}-thumbs")
                     if selected is not None:
-                       pass
+                        if selected == "thumbsUp":
+                            sendFeedback(True)  # Call sendFeedback with True for thumbs-up
+                        else:  # This covers the case where selected == "thumbsDown"
+                            sendFeedback(False)  # Call sendFeedback with False for thumbs-down
 
         if st.session_state.suggestions:
             with st.container(key="vy-suggestion-state"):
