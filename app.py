@@ -49,14 +49,14 @@ def newChat():
     
     if isinstance(response, dict) and "user_chat_id" in response:
         st.session_state.CHAT_ID = response.get("user_chat_id", "")
-        st.session_state.USER_ID = response.get("user_id", "")  # Store user_id
+        #st.session_state.USER_ID = response.get("user_id", "")  # Store user_id
     else:
         st.error("Failed to create new chat.")
     st.rerun()
 
 def apichat( text):
     try:
-        url = CHAT_RESPONSE_ENDPOINT  # Use the endpoint from .env
+        url = BASE_URL+ CHAT_RESPONSE_ENDPOINT  # Use the endpoint from .env
         user_chat_id = st.session_state.get("CHAT_ID", None)
         user_id = "user-1"  # Retrieve user_id
 
