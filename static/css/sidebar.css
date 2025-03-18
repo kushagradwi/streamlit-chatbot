@@ -67,7 +67,7 @@ section[data-testid="stSidebar"] a.vy-sidebar-link:hover {
   border: 0px;
   padding: 10px 8px;
   display: flex;
-  gap: 10px;
+  gap: 0px;
   justify-content: flex-start;
   margin-top: auto;
   border-radius: 7px;
@@ -81,14 +81,17 @@ section[data-testid="stSidebar"] a.vy-sidebar-link:hover {
 .st-key-vy-logout-container [data-testid="stIconMaterial"] {
   font-size: 2rem;
 }
+.st-key-vy-logout-container [data-testid="stMarkdownContainer"] {
+  margin-bottom: 0;
+}
 
 [data-testid="stPopoverButton"] {
   position: absolute;
   top: 0;
   opacity: 0;
-  width: 100%;
-  left: 0;
-  height: 55px;
+  width: 30px;
+  right: 0;
+  height: 100%;
 }
 [data-testid="stPopoverBody"] {
   background: transparent;
@@ -230,9 +233,15 @@ section[data-testid="stSidebar"] a.vy-sidebar-link:hover {
   justify-content: center;
 }
 
+[data-testid="stSidebar"][aria-expanded="false"]
+  [data-testid="stPopoverButton"] {
+  width: 100%;
+}
+
 .vy-profile-container {
   display: flex;
   gap: 7px;
+  align-items: center;
 }
 .vy-profile-image {
   height: 27px;
@@ -242,12 +251,15 @@ section[data-testid="stSidebar"] a.vy-sidebar-link:hover {
 }
 .vy-profile-name {
   font-size: 12px;
+  line-height: 15px;
 }
 .vy-profile-email {
   font-size: 8px;
+  color: #e7e7e7;
+  list-style: 1;
 }
 .vy-profile-icon {
-  height: 20px;
+  height: 30px;
   width: 10px;
   padding-right: 8px;
   margin-left: auto;
