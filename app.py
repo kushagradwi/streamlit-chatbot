@@ -75,10 +75,7 @@ def sendFeedback(helpful):
     response = post_api_call_with_cookie(url, headers=headers, payload=payload)
     print("Feedback :",response)
     # Handling the response
-    if isinstance(response, str) and "Error!" in response:
-        st.error(response)  # Show error message in Streamlit
-    else:
-        st.success("Feedback recorded successfully!")  # Success message
+    
 
 def apichat( text):
     try:
@@ -95,18 +92,27 @@ def apichat( text):
             "api-key": "884c0b4e-ecc2-44a7-bbbd-39835aec2518",
             "Content-Type": "application/json"
         }
-        
+
+        def requestMsg(msg):
+            return {
+                "role": msg["role"], "content": msg["content"]
+            } 
+        print(st.session_state.messages)
+
+        message_temp=list(map(requestMsg ,st.session_state.messages))
+        message_temp.pop()
         payload = {
             "user_id": user_id,
             "user_chat_id": user_chat_id,
-            "messages": [
-                {"role": "user", "content": text}
-            ]
+            "messages": message_temp
+            #"messages": [{"role":"user","content":"what are people talking about the vystar credit card"}]
         }
+        
+        print("Payload :",payload)
 
         response = post_api_call_with_cookie(url, headers=headers, payload=json.dumps(payload))
 
-        print(response["response_txt"])
+        print("Response :",response)
 
         if isinstance(response, str) and response.startswith("Error!"):
             st.error(response)
@@ -131,11 +137,17 @@ def continueChat(text):
     st.chat_message("user").markdown(text)
     st.session_state.messages.append({"role": "user", "content": text, "id": len(st.session_state.messages)})
 
+    st.session_state.messages.append({
+        "role": "assistant", 
+        "content": "Analyzing..",  
+        "id": len(st.session_state.messages)
+    })
+
     # Get chatbot response
     res = apichat(text)
     
     # Error handling in case API response fails
-    if res is None or "response_txt" not in res:
+    if (res is None) or ("response_txt" not in res.keys()):
         st.error("Failed to get a response from the chatbot.")
         return
 
@@ -144,15 +156,15 @@ def continueChat(text):
         st.markdown(res["response_txt"])
 
     # Add assistant response to chat history
-    st.session_state.messages.append({
+    st.session_state.messages[-1]={
         "role": "assistant", 
         "content": res["response_txt"], 
         "source": res.get("cited_reviews", ""), 
         "id": len(st.session_state.messages)
-    })
+    }
     
     # Update session state with suggestions if available
-    st.session_state.suggestions = res.get("suggestions", [])
+    st.session_state.suggestions = res.get("query_suggestions", [])
 
     # Rerun the app to refresh the chat interface
     st.rerun()
@@ -302,25 +314,26 @@ def run_app():
             else:
                 with st.chat_message(name=message["role"],avatar="assets/sidenav/compas_icon.png"):
                     st.markdown(message["content"],unsafe_allow_html=True)
-                with st.expander("source",icon=":material/anchor:"):
-                    st.html("""<div class="vy-source-main-header">Source citation</div>""")
-                    for msg in message["source"]:
-                        st.markdown(f"""<div class="vy-source-citation">
-                            <div class="vy-source-citation-header-container">
-                                <div class="vy-source-citation-header">
-                                    {msg["review_src"]}
+                if "source" in message.keys() and message["source"]:
+                    with st.expander("source",icon=":material/anchor:"):
+                        st.html("""<div class="vy-source-main-header">Source citation</div>""")
+                        for msg in message["source"]:
+                            st.markdown(f"""<div class="vy-source-citation">
+                                <div class="vy-source-citation-header-container">
+                                    <div class="vy-source-citation-header">
+                                        {msg["review_src"]}
+                                    </div>
+                                    <div class="vy-source-citation-rating">
+                                        Rating 5
+                                    </div>
+                                    <div class="vy-source-citation-date">
+                                        Updated {msg["review_date_time"]}
+                                    </div>
                                 </div>
-                                <div class="vy-source-citation-rating">
-                                    Rating 5
+                                <div class="vy-source-citation-info">
+                                    {msg["review_text"]}
                                 </div>
-                                <div class="vy-source-citation-date">
-                                    Updated {msg["review_date_time"]}
-                                </div>
-                            </div>
-                            <div class="vy-source-citation-info">
-                                {msg["review_text"]}
-                            </div>
-                        </div>""",unsafe_allow_html=True)
+                            </div>""",unsafe_allow_html=True)
                 sentiment_mapping = [":material/thumb_down:", ":material/thumb_up:"]
                 with st.container(key=f"vy-chat-msg-container-thumbs-{message['id']}"):
                     selected = st.feedback("thumbs",key=f"{message['id']}-thumbs")
