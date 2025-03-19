@@ -76,7 +76,7 @@ def sendFeedback(helpful):
     print("Feedback :",response)
     # Handling the response
     
-@st.cache_data
+
 def apichat( text):
     try:
         url = BASE_URL+ CHAT_RESPONSE_ENDPOINT  # Use the endpoint from .env
@@ -142,13 +142,20 @@ def continueChat(text):
         "content": "Analyzing..",  
         "id": len(st.session_state.messages)
     })
-    st.rerun()
+    
+    
     # Get chatbot response
     res = apichat(text)
     
     # Error handling in case API response fails
-    if (res is None) or ("response_txt" not in res.keys()):
-        st.error("Failed to get a response from the chatbot.")
+    if (res is None) or ("response_txt" not in res.keys()) or (res["response_txt"] is None) :
+        print("Error occured")
+        st.session_state.messages[-1]={
+        "role": "assistant", 
+        "content": "Failed to get a response from the chatbot.",  
+        "id": len(st.session_state.messages)
+        }
+        st.rerun()   
         return
 
     # Display assistant response in chat message container
