@@ -328,7 +328,7 @@ def run_app():
                             st.markdown(f"""<div class="vy-source-citation">
                                 <div class="vy-source-citation-header-container">
                                     <div class="vy-source-citation-header">
-                                        {msg["review_src"]}
+                                        {'Source' if not msg["review_src"] else msg["review_src"] }
                                     </div>
                                     <div class="vy-source-citation-rating">
                                         Rating 5
