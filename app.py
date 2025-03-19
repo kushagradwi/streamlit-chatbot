@@ -142,7 +142,7 @@ def continueChat(text):
         "content": "Analyzing..",  
         "id": len(st.session_state.messages)
     })
-
+    st.rerun()
     # Get chatbot response
     res = apichat(text)
     
@@ -236,10 +236,10 @@ def run_app():
     with st.sidebar:
         st.markdown("""<div class="welcome-wrap">
                     <div class="welcome-wrap-text-upper">
-                        <div class="welcome-wrap-text-bottom">Welcome to,</div>
+                        <div class="welcome-wrap-text-bottom">Welcome to</div>
                         <div class="welcome-wrap-text-image">
                             <img style="width: 19px; height: 20px" src="app/static/landing/compas_icon.png" />
-                            <div><span style="color: white; font-size: 16px; font-weight: 400; line-height: 24px; word-wrap: break-word">VyStar AI -</span><span style="color: white; font-size: 16px; font-weight: 700; line-height: 24px; word-wrap: break-word">VAI </span></div>
+                            <div><span style="color: white; font-size: 16px; font-weight: 400; line-height: 24px; word-wrap: break-word">VyStar AI - </span><span style="color: white; font-size: 16px; font-weight: 700; line-height: 24px; word-wrap: break-word">VAI </span></div>
                         </div>
                     </div>
                 </div>""", unsafe_allow_html=True)
@@ -259,7 +259,7 @@ def run_app():
                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="16" viewBox="0 0 15 16" fill="none">
                     <path d="M5.33333 8H2.15556C1.75107 8 1.54883 8 1.39434 8.07872C1.25845 8.14796 1.14796 8.25845 1.07872 8.39434C1 8.54883 1 8.75107 1 9.15556V13.3444C1 13.7489 1 13.9512 1.07872 14.1057C1.14796 14.2416 1.25845 14.352 1.39434 14.4213C1.54883 14.5 1.75107 14.5 2.15556 14.5H5.33333M5.33333 14.5H9.66667M5.33333 14.5L5.33333 5.54444C5.33333 5.13996 5.33333 4.93772 5.41205 4.78323C5.48129 4.64733 5.59178 4.53685 5.72767 4.46761C5.88217 4.38889 6.08441 4.38889 6.48889 4.38889H8.51111C8.91559 4.38889 9.11783 4.38889 9.27233 4.46761C9.40822 4.53685 9.51871 4.64733 9.58795 4.78323C9.66667 4.93772 9.66667 5.13996 9.66667 5.54444V14.5M9.66667 14.5H12.8444C13.2489 14.5 13.4512 14.5 13.6057 14.4213C13.7416 14.352 13.852 14.2416 13.9213 14.1057C14 13.9512 14 13.7489 14 13.3444V2.65556C14 2.25107 14 2.04883 13.9213 1.89434C13.852 1.75845 13.7416 1.64796 13.6057 1.57872C13.4512 1.5 13.2489 1.5 12.8444 1.5H10.8222C10.4177 1.5 10.2155 1.5 10.061 1.57872C9.92511 1.64796 9.81463 1.75845 9.74538 1.89434C9.66667 2.04883 9.66667 2.25107 9.66667 2.65556V5.11111" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                     </svg>
-                    <span class="vy-sidebar-link-label">Dashboard</span>
+                    <span class="vy-sidebar-link-label">Analytics</span>
                 </a>
             </div>
         </div>
@@ -272,10 +272,10 @@ def run_app():
                 <img class="vy-profile-image" src="app/static/landing/user-profile.png" alt="user">
                 <div class="vy-profile-info">
                     <div class="vy-profile-name">
-                        John Snow
+                        Stephen Johnson
                     </div>
                     <div class="vy-profile-email">
-                        john.snow@gmail.com
+                        johnson.s@vystarcu.org
                     </div>
                 </div>
                 <div class="vy-profile-icon"><svg xmlns="http://www.w3.org/2000/svg" width="4" height="14" viewBox="0 0 4 14"
@@ -288,7 +288,7 @@ def run_app():
             unsafe_allow_html=True
             ) 
             with st.popover(label="", use_container_width=True):
-                logoutButton=st.button(label="Logout")
+                logoutButton=st.button(label="Logout", icon=":material/logout:")
 
         if logoutButton:
             logout()
@@ -303,7 +303,7 @@ def run_app():
     
     # Display welcome message if no chat history exists
     if not st.session_state.messages:
-        st.markdown("<h1>Hi! How can I assist you today?</h1>", unsafe_allow_html=True)
+        st.markdown("<h1>Hi! How can I assist you today...</h1>", unsafe_allow_html=True)
 
     # Display chat messages from history on app rerun
     with st.container(key="vy-chat-msg-container"):
@@ -316,7 +316,7 @@ def run_app():
                     st.markdown(message["content"],unsafe_allow_html=True)
                 if "source" in message.keys() and message["source"]:
                     with st.expander("source",icon=":material/anchor:"):
-                        st.html("""<div class="vy-source-main-header">Source citation</div>""")
+                        st.html("""<div class="vy-source-main-header">Source Citations</div>""")
                         for msg in message["source"]:
                             st.markdown(f"""<div class="vy-source-citation">
                                 <div class="vy-source-citation-header-container">
@@ -326,22 +326,24 @@ def run_app():
                                     <div class="vy-source-citation-rating">
                                         Rating 5
                                     </div>
-                                    <div class="vy-source-citation-date">
-                                        Updated {msg["review_date_time"]}
-                                    </div>
+                                    {f"""<div class="vy-source-citation-date">
+                                        Review Date {msg["review_date_time"]}
+                                    </div>"""if msg["review_date_time"] else ""}
+                                    
                                 </div>
                                 <div class="vy-source-citation-info">
                                     {msg["review_text"]}
                                 </div>
                             </div>""",unsafe_allow_html=True)
                 sentiment_mapping = [":material/thumb_down:", ":material/thumb_up:"]
-                with st.container(key=f"vy-chat-msg-container-thumbs-{message['id']}"):
-                    selected = st.feedback("thumbs",key=f"{message['id']}-thumbs")
-                    if selected is not None:
-                        if selected == "thumbsUp":
-                            sendFeedback(True)  # Call sendFeedback with True for thumbs-up
-                        else:  # This covers the case where selected == "thumbsDown"
-                            sendFeedback(False)  # Call sendFeedback with False for thumbs-down
+                if "source" in message.keys() and message["source"]:
+                    with st.container(key=f"vy-chat-msg-container-thumbs-{message['id']}"):
+                        selected = st.feedback("thumbs",key=f"{message['id']}-thumbs")
+                        if selected is not None:
+                            if selected == "thumbsUp":
+                                sendFeedback(True)  # Call sendFeedback with True for thumbs-up
+                            else:  # This covers the case where selected == "thumbsDown"
+                                sendFeedback(False)  # Call sendFeedback with False for thumbs-down
 
         if st.session_state.suggestions:
             with st.container(key="vy-suggestion-state"):
