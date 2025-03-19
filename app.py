@@ -76,7 +76,7 @@ def sendFeedback(helpful):
     print("Feedback :",response)
     # Handling the response
     
-
+@st.cache_data
 def apichat( text):
     try:
         url = BASE_URL+ CHAT_RESPONSE_ENDPOINT  # Use the endpoint from .env
@@ -92,7 +92,7 @@ def apichat( text):
             "api-key": "884c0b4e-ecc2-44a7-bbbd-39835aec2518",
             "Content-Type": "application/json"
         }
-
+        
         def requestMsg(msg):
             return {
                 "role": msg["role"], "content": msg["content"]
