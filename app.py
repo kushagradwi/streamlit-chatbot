@@ -326,10 +326,7 @@ def run_app():
                                     <div class="vy-source-citation-rating">
                                         Rating 5
                                     </div>
-                                    {f"""<div class="vy-source-citation-date">
-                                        Review Date {msg["review_date_time"]}
-                                    </div>"""if msg["review_date_time"] else ""}
-                                    
+                                    {f'<div class="vy-source-citation-date">Review Date {msg["review_date_time"]}</div>' if msg["review_date_time"] else ''}
                                 </div>
                                 <div class="vy-source-citation-info">
                                     {msg["review_text"]}
@@ -408,3 +405,4 @@ def run_app():
     # st.markdown("""<div style="text-align: center;  bottom: 20px; width: 100%; opacity: 0.54; color: #006EF5; font-size: 10px; font-family: Poppins; font-weight: 400; word-wrap: break-word">© 2025 Vystar, Incorporated and its Affiliates. All Rights Reserved</div>""",unsafe_allow_html=True)
 
 run_app()
+#end
