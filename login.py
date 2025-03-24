@@ -1,6 +1,7 @@
 from PIL import Image
 import base64
 import streamlit as st
+from Azure_SSO import azure_sso_handler
 
 def mock_microsoft_sso():
     st.session_state["authenticated"] = True
@@ -179,6 +180,7 @@ if not st.session_state["authenticated"]:
 
     if st.button("SIGN IN", key="microsoft-sign-in"):
         mock_microsoft_sso()
+        #azure_sso_handler()
 
     st.markdown('<div class="footer"><div class= "footer-text" style="width: 381.65px; text-align: center; color: white; font-size: 10px; font-family: Poppins; font-weight: 400; word-wrap: break-word">© 2025 Vystar, Incorporated and its Affiliates. All Rights Reserved</div></div>', unsafe_allow_html=True)
 
