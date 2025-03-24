@@ -340,10 +340,10 @@ with st.container(key="vy-chat-msg-container"):
     #                 if st.button(label=sug,key=f"{sug}"):
     #                     continueChat(sug)
 
-if st.session_state.messages:
-    if prompt := st.chat_input("You can ask me more..."):
-        setCurrentMessage(prompt)
-        st.rerun()
+
+if prompt := st.chat_input("You can ask me more..."):
+    setCurrentMessage(prompt)
+    st.rerun()
 
 if st.session_state.current_message:
     continueChat(st.session_state.current_message)
