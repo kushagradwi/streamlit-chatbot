@@ -200,7 +200,7 @@ st.markdown(
                 <div style="
                     font-size: 10px;
                     line-height: 10px;
-                "><span style="color: #868686; font-size: 10px; font-family: Poppins; font-weight: 400; word-wrap: break-word">Trained on last 12 months of data till </span><span style="color: #868686; font-size: 10px; font-family: Poppins; font-weight: 700; word-wrap: break-word">Dec 2024</span></div>
+                "><span style="color: #868686; font-size: 10px; font-family: Poppins; font-weight: 400; word-wrap: break-word">Trained on last 12 months of data till </span><span style="color: #868686; font-size: 10px; font-family: Poppins; font-weight: 700; word-wrap: break-word">Feb 2025</span></div>
             </div>
         </div>
     </div>
