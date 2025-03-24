@@ -55,131 +55,12 @@ def newChat():
         st.error("Failed to create new chat.")
     st.rerun()
 
-# Function to send feedback using post_api_call_with_cookie
-def sendFeedback(helpful):
-    url = f"{BASE_URL}{RECORD_FEEDBACK_ENDPOINT}"
-    payload = json.dumps({
-        "user_id": "user-1",
-        "user_chat_id": "user-1_chat2",
-        "query_id": "query_1234",
-        "response_id": "response_1234",
-        "helpful": helpful
-    })
-    headers = {
-        "accept": "application/json",
-        "api-key": "884c0b4e-ecc2-44a7-bbbd-39835aec2518",
-        "Content-Type": "application/json"
-    }
-
-    # Making the API call using the helper function
-    response = post_api_call_with_cookie(url, headers=headers, payload=payload)
-    print("Feedback :",response)
-    # Handling the response
-    
-
-def apichat( text):
-    try:
-        url = BASE_URL+ CHAT_RESPONSE_ENDPOINT  # Use the endpoint from .env
-        user_chat_id = "user-1-chat1"
-        user_id = "user-1"  # Retrieve user_id
-
-        if not user_id:
-            st.error("User ID is missing.")
-            return None
-        
-        headers = {
-            "accept": "application/json",
-            "api-key": "884c0b4e-ecc2-44a7-bbbd-39835aec2518",
-            "Content-Type": "application/json"
-        }
-        
-        def requestMsg(msg):
-            return {
-                "role": msg["role"], "content": msg["content"]
-            } 
-        print(st.session_state.messages)
-
-        message_temp=list(map(requestMsg ,st.session_state.messages))
-        message_temp.pop()
-        payload = {
-            "user_id": user_id,
-            "user_chat_id": user_chat_id,
-            "messages": message_temp
-            #"messages": [{"role":"user","content":"what are people talking about the vystar credit card"}]
-        }
-        
-        print("Payload :",payload)
-       
-        with st.spinner("Waiting for response..."):
-            response = post_api_call_with_cookie(url, headers=headers, payload=json.dumps(payload))
-
-        
-        # response = {'user_chat_id': 'user-1-chat1', 'query_id': 'query_34b74212-6306-4df2-ad90-cec8b5e9755d', 'messages': [{'role': 'user', 'content': 'hi'}, {'role': 'assistant', 'content': "This is out of my context. I'm a reviews analyst capable of answering questions related to Vystar Credit Union's products and services. Please ask a relevant question."}, {'role': 'user', 'content': 'what are people taking about vystar credit card'}, {'role': 'assistant', 'content': "**Summary of Feedbacks**: The reviews about Vystar Credit Union's credit card services reflect a range of experiences, from positive interactions with customer service representatives to concerns about fees and credit building options. Overall, customers appreciate the helpfulness and knowledge of Vystar's staff, but some express frustration with certain policies and limitations. The general sentiment is mixed, with some customers highly satisfied and others disappointed.\n\n- **Customer Service Experience**:\n  - Many customers praise the excellent service and helpfulness of Vystar's staff, mentioning specific representatives by name.\n  - Representatives are described as knowledgeable, polite, and efficient in handling customer inquiries and issues.\n- **Fees & Charges**:\n  - Some customers express dissatisfaction with the fees associated with Vystar's credit cards, particularly the charge for replacing a compromised card.\n  - Concerns are raised about the fairness of charging customers for services related to fraud that is not their fault.\n- **Credit Building Options**:\n  - A few customers mention that Vystar has limited options for building credit, with one reviewer noting that there is essentially only one option for those without good credit, which is a secured credit card.\n- **Positive Sentiments**:\n  - Several customers appreciate the benefits and discounts associated with Vystar's checking accounts and credit cards.\n  - The overall experience with Vystar is praised by many for its efficiency, helpful staff, and the feeling of being well taken care of.\n- **Negative Sentiments**:\n  - Disappointment and frustration are expressed regarding certain policies, such as fees for replacement cards and limited credit building options.\n  - Some customers feel that Vystar's growth has led to a decrease in the quality of service and an increase in fees."}], 'response_id': 'response_34b74212-6306-4df2-ad90-cec8b5e9755d', 'response_txt': "**Summary of Feedbacks**: The reviews about Vystar Credit Union's credit card services reflect a range of experiences, from positive interactions with customer service representatives to concerns about fees and credit building options. Overall, customers appreciate the helpfulness and knowledge of Vystar's staff, but some express frustration with certain policies and limitations. The general sentiment is mixed, with some customers highly satisfied and others disappointed.\n\n- **Customer Service Experience**:\n  - Many customers praise the excellent service and helpfulness of Vystar's staff, mentioning specific representatives by name.\n  - Representatives are described as knowledgeable, polite, and efficient in handling customer inquiries and issues.\n- **Fees & Charges**:\n  - Some customers express dissatisfaction with the fees associated with Vystar's credit cards, particularly the charge for replacing a compromised card.\n  - Concerns are raised about the fairness of charging customers for services related to fraud that is not their fault.\n- **Credit Building Options**:\n  - A few customers mention that Vystar has limited options for building credit, with one reviewer noting that there is essentially only one option for those without good credit, which is a secured credit card.\n- **Positive Sentiments**:\n  - Several customers appreciate the benefits and discounts associated with Vystar's checking accounts and credit cards.\n  - The overall experience with Vystar is praised by many for its efficiency, helpful staff, and the feeling of being well taken care of.\n- **Negative Sentiments**:\n  - Disappointment and frustration are expressed regarding certain policies, such as fees for replacement cards and limited credit building options.\n  - Some customers feel that Vystar's growth has led to a decrease in the quality of service and an increase in fees.", 'cited_reviews': [{'review_id': '66216b4097d7de66a0529e6c', 'review_text': 'I went to Vystar to have my niece open an account and we received the best service you could possible get, she explained everything in detail and explained to my niece about building credit and having credit cards and how to not get yourself in debt, I’ve been with vystar for almost 2 years and never experienced a problem, everyone here is wonderful and thank you Brittany “BJ” Jarrell for you help and expertise, you deserve all praise !!!!', 'review_date_time': '4/18/2024 18:49', 'rating': 5, 'review_src': None}, {'review_id': '67a22291973da10836fe69e5', 'review_text': "VyStar is an incredible banking facility that truly cares about their customers. I worked with PAOLA OSORIO and she was extremely caring and understanding of our situation. Don't waste time with other banks...go to your local VyStar. :)", 'review_date_time': None, 'rating': 5, 'review_src': 'GOOGLE'}, {'review_id': '677eae8b4d510b114efa5be3', 'review_text': 'Vystar has great customer service as well as plenty of benefits for their checking account! Discounts come with anything that they sponsor.', 'review_date_time': '1/8/2025 16:57', 'rating': 5, 'review_src': 'GOOGLE'}, {'review_id': '6753df57f4786b30876fbf40', 'review_text': 'Starting to get disappointed in VyStar and considering even changing banks. VyStar used to be a really good bank but because they are becoming bigger they think they can take advantage of their customers. They are not bringing back their fees for anything and everything. Now if your own card gets compromised and forced to get a new card they want to charge you to get a new card.. so it’s like you’re getting double fraud. Can anyone explain to me the thought process of “hey, if someone steals a credit card number and attempts to take their money, let’s also take their money and charge them for something that’s not our clients fault as to why they need an new card” ….. don’t even get me started with their new credit card interests. But hey! Everyone is always about taking peoples money when it’s already hard on most Americans.', 'review_date_time': '12/7/2024 5:38', 'rating': None, 'review_src': 'GOOGLE'}, {'review_id': '660f691568f21c57991cbfb8', 'review_text': 'Morgan M. is AWESOME! Vystar is a great place to build your credit and get personal needs handled efficiently. I have been a loyal customer for over three years after leaving a bank I did business with for ten years. Customer service is top notch! Email/text/phone communication are a priority whether handling a loan, banking issue or personal inquiries. Go to Morgan M. with anything and she will point you in the right direction if she cannot handle it herself.', 'review_date_time': '4/5/2024 2:59', 'rating': 5, 'review_src': 'GOOGLE'}], 'query_suggestions': ['Query Suggestion 1', 'Query Suggestion 2', 'Query Suggestion 3']}
-        # response = post_api_call_with_cookie(url, headers=headers, payload=json.dumps(payload))
-
-        print("Response :",response)
-
-        if isinstance(response, str) and response.startswith("Error!"):
-            st.error(response)
-            return None
-        
-        return response  # Returns the chatbot's response JSON
-
-    except Exception as e:
-        st.error(f"Request failed: {e}")
-        return None
-
 def continueChat(text):
     if not text:
         return
     
-    user_id = "user-1"  # Retrieve user_id
-    if not user_id:
-        st.error("User ID is missing.")
-        return
-
-    # Display the user's message in the chat interface
-    st.chat_message("user").markdown(text)
-    st.session_state.messages.append({"role": "user", "content": text, "id": len(st.session_state.messages)})
-
-    st.session_state.messages.append({
-        "role": "assistant", 
-        "content": "Analyzing..",  
-        "id": len(st.session_state.messages)
-    })
-    
-    
-    # Get chatbot response
-    res = apichat(text)
-    
-    # Error handling in case API response fails
-    if (res is None) or ("response_txt" not in res.keys()) or (res["response_txt"] is None) :
-        print("Error occured")
-        st.session_state.messages[-1]={
-        "role": "assistant", 
-        "content": "Failed to get a response from the chatbot.",  
-        "id": len(st.session_state.messages)
-        }
-        st.rerun()   
-        return
-
-    # Display assistant response in chat message container
-    with st.chat_message("assistant"):
-        st.markdown(res["response_txt"])
-
-    # Add assistant response to chat history
-    st.session_state.messages[-1]={
-        "role": "assistant", 
-        "content": res["response_txt"], 
-        "source": res.get("cited_reviews", ""), 
-        "id": len(st.session_state.messages)
-    }
-    
-    # Update session state with suggestions if available
-    st.session_state.suggestions = res.get("query_suggestions", [])
-
-    # Rerun the app to refresh the chat interface
-    st.rerun()
+    st.session_state.current_message = text
+    st.switch_page("old_chat.py")
 
 
 st.set_page_config(layout="wide", initial_sidebar_state="collapsed")
@@ -300,53 +181,6 @@ with st.sidebar:
 if not st.session_state.messages:
     st.markdown("<h1>Hi! How can I assist you today...</h1>", unsafe_allow_html=True)
 
-# Display chat messages from history on app rerun
-with st.container(key="vy-chat-msg-container"):
-    for message in st.session_state.messages:
-        if message["role"] == "user":
-            with st.chat_message(name=message["role"],avatar="static/landing/user-profile.png"):
-                st.markdown(message["content"],unsafe_allow_html=True)
-        else:
-            with st.chat_message(name=message["role"],avatar="assets/sidenav/compas_icon.png"):
-                st.markdown(message["content"],unsafe_allow_html=True)
-            if "source" in message.keys() and message["source"]:
-                with st.expander("source",icon=":material/anchor:"):
-                    st.html("""<div class="vy-source-main-header">Source Citations</div>""")
-                    for msg in message["source"]:
-                        r_source = msg["review_src"] if msg["review_src"] else 'Source'
-                        r_rating = f'Rating {msg["rating"]}' if msg["rating"] else ''
-                        r_datetime = f'Review Date  {msg["review_date_time"]}' if msg["review_date_time"] else ''
-                        r_test = msg["review_text"] if msg["review_text"] else ''
-                        st.markdown(f"""<div class="vy-source-citation">
-                                        <div class="vy-source-citation-header-container">
-                                            <div class="vy-source-citation-header">
-                                                {r_source}
-                                            </div>
-                                            <div class="vy-source-citation-rating">{r_rating}</div>
-                                            <div class="vy-source-citation-date">{r_datetime}</div>
-                                        </div>
-                                        <div class="vy-source-citation-info">
-                                            {r_test}
-                                        </div>
-                                    </div>""",unsafe_allow_html=True)
-            sentiment_mapping = [":material/thumb_down:", ":material/thumb_up:"]
-            if "source" in message.keys() and message["source"]:
-                with st.container(key=f"vy-chat-msg-container-thumbs-{message['id']}"):
-                    selected = st.feedback("thumbs",key=f"{message['id']}-thumbs")
-                    if selected is not None:
-                        if selected == "thumbsUp":
-                            sendFeedback(True)  # Call sendFeedback with True for thumbs-up
-                        else:  # This covers the case where selected == "thumbsDown"
-                            sendFeedback(False)  # Call sendFeedback with False for thumbs-down
-
-    # if st.session_state.suggestions:
-    #     with st.container(key="vy-suggestion-state"):
-    #         st.html('<div class="vy-suggestion-container">Here are some suggestion to help you know more!</div>')
-    #         with st.container(key="vy-suggestion-state-button-group"):
-    #             for sug in st.session_state.suggestions:
-    #                 if st.button(label=sug,key=f"{sug}"):
-    #                     continueChat(sug)
-
 if not st.session_state.messages:
     with st.form("my_form"):
         with st.container(key="vy-chat-container"):
@@ -354,11 +188,6 @@ if not st.session_state.messages:
             if st.form_submit_button(label="", icon=":material/send:"):
                 continueChat(text)
             st.markdown("""<div class="vy-chat-info">VAI can make mistakes. Check important information.</div>""",unsafe_allow_html=True)
-
-if st.session_state.messages:
-    if prompt := st.chat_input("You can ask me more..."):
-        continueChat(text=prompt)
-        
 
 if not st.session_state.messages:
     st.markdown(
