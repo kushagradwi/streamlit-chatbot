@@ -2,9 +2,16 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
+from sidebar import renderSidebar
 
 # Set page config
 st.set_page_config(layout="wide", page_title="LLM Ops Dashboard")
+
+with open("static/css/sidebar.css") as css_file:
+    st.html(f"<style>{css_file.read()}</style>")
+
+with open("static/css/dashboard.css") as dashboard_css_file:
+    st.html(f"<style>{dashboard_css_file.read()}</style>")    
 
 # Header with Timeline Selector
 col1, col2 = st.columns([4, 1])
@@ -27,6 +34,8 @@ data = pd.DataFrame({
 # Main Layout
 col1, col2 = st.columns(2)
 
+renderSidebar()
+
 # Request Handling Status
 with col1:
     with st.container(key="col1"):
@@ -36,7 +45,7 @@ with col1:
                     title="Day Level Requests - Status Counts Across Time",
                     barmode="group",
                     color_discrete_map={"Success Requests": "green", "Failure Requests": "red"})
-        fig.update_layout(plot_bgcolor='white', paper_bgcolor='black', 
+        fig.update_layout(plot_bgcolor='white', paper_bgcolor='white', 
                         margin=dict(l=10, r=10, t=30, b=10),
                         xaxis=dict(showgrid=False), yaxis=dict(showgrid=False),
                         font=dict(color='rgba(157, 157, 157, 1)'))
@@ -102,3 +111,4 @@ with col6:
                         xaxis=dict(showgrid=False), yaxis=dict(showgrid=False),
                         font=dict(color='rgba(157, 157, 157, 1)'))
         st.plotly_chart(fig, use_container_width=True)
+

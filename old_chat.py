@@ -145,6 +145,11 @@ def continueChat(text):
             st.markdown(text,unsafe_allow_html=True)
         with st.chat_message(name="assistant",avatar="assets/sidenav/compas_icon.png"):
             st.markdown('Analyzing...',unsafe_allow_html=True)
+            if st.button("⛔ Stop Generating"):
+                st.session_state.stop_signal = True
+                st.session_state.messages.pop()
+                st.session_state.messages.pop()
+
     
     # Get chatbot response
     res = apichat(text)
