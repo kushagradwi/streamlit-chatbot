@@ -4,3 +4,8 @@ showSidebarNavigation = false
 [server]
 enableStaticServing = true
 
+[theme]
+base="light"
+primaryColor="#426ace"
+secondaryBackgroundColor="#efefef"
+textColor="#000000"
