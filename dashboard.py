@@ -20,95 +20,131 @@ with col1:
 with col2:
     st.selectbox("Select Time Range", ["Last 30 days", "Last 7 days", "Today"], index=0)
 
-# Sample Data
-dates = pd.date_range(start="2024-08-01", periods=10)
-data = pd.DataFrame({
-    "Date": dates,
-    "Success Requests": np.random.randint(200, 800, size=10),
-    "Failure Requests": np.random.randint(50, 300, size=10),
-    "Chat Model Latency": np.random.randint(100, 400, size=10),
-    "Lookup Latency": np.random.randint(100, 400, size=10),
-    "Prompt Latency": np.random.randint(100, 400, size=10),
-})
-
-# Main Layout
-col1, col2 = st.columns(2)
-
 renderSidebar('dashboard')
 
-# Request Handling Status
+
+#########
+#Data
+dates = ["03-Mar", "04-Mar", "05-Mar", "06-Mar", "07-Mar"]
+rag_latency = [2300, 4000, 3500, 9000, 3000]
+response_time = [2400, 4100, 3600, 9100, 3100]
+overall_error_rate = [0.9, 1.2, 1.5, 0.6, 1.5]
+llm_error_rate = [0.8, 1.2, 1.0, 0.4, 1.4]
+successful_queries = [4955, 3359, 4826, 6659, 4186]
+failed_queries = [45, 41, 74, 41, 64]
+total_queries = [5000, 3400, 4900, 6700, 4250]
+unique_users = [10, 12, 22, 35, 29]
+chats_per_user = [5, 7, 12, 9, 14]
+queries_per_user = [50, 70, 120, 90, 140]
+input_tokens = [300000, 250000, 290000, 500000, 490000]
+output_tokens = [400000, 200000, 290000, 500000, 490000]
+embedding_tokens = [530000, 870000, 590000, 335000, 990000]
+llm_cost = [x * 0.0001 for x in output_tokens]
+embedding_cost = [x * 0.00005 for x in embedding_tokens]
+total_usage_cost = [lc + ec for lc, ec in zip(llm_cost, embedding_cost)]
+cost_per_user = [tc / u for tc, u in zip(total_usage_cost, unique_users)]
+cost_per_query = [tc / tq for tc, tq in zip(total_usage_cost, total_queries)]
+########
+#Level-1
+col1, col2 = st.columns(2)
+# Latency Graph
 with col1:
     with st.container(key="col1"):
-        st.subheader("Request Handling Status")
-        fig = px.bar(data, x="Date", y=["Success Requests", "Failure Requests"],
-                    labels={"value": "Number of Requests", "variable": "Status"},
-                    title="Day Level Requests - Status Counts Across Time",
-                    barmode="group",
-                    color_discrete_map={"Success Requests": "green", "Failure Requests": "red"})
-        fig.update_layout(plot_bgcolor='white', paper_bgcolor='white', 
-                        margin=dict(l=10, r=10, t=30, b=10),
-                        xaxis=dict(showgrid=False), yaxis=dict(showgrid=False),
-                        font=dict(color='rgba(157, 157, 157, 1)'))
-        st.plotly_chart(fig, use_container_width=True)
+        st.markdown("""
+    <h3 style='color: black; font-family: Poppins, sans-serif;'>Unique Users Graph</h3>
+""", unsafe_allow_html=True)
+        df_latency = pd.DataFrame({"Date": dates, "RAG Latency": rag_latency, "Response Time": response_time})
+        fig1 = px.line(df_latency, x="Date", y=["RAG Latency", "Response Time"], markers=True,
+                    title="Latency for RAG and Response Time", template="simple_white")
+        st.plotly_chart(fig1)
 
-# System Metric Overview
+# Error Rates Graph
 with col2:
     with st.container(key="col2"):
-        st.subheader("System Metric Overview")
-        metric1, metric2, metric3 = st.columns(3)
-        metric1.metric(label="Avg Flow Latency", value=f"{np.mean(data['Chat Model Latency']):.2f} ms")
-        metric2.metric(label="Avg Token Consumption", value="N/A")
-        metric3.metric(label="Error Rate", value="N/A")
-
-# Row 2: LLM Latency & Daily Avg Node Latency
-col3, col4 = st.columns(2)
-
+        st.markdown("""
+    <h3 style='color: black; font-family: Poppins, sans-serif;'>Error Rates Graph</h3>
+""", unsafe_allow_html=True)
+        df_error = pd.DataFrame({"Date": dates, "Overall Error Rate": overall_error_rate, "LLM Error Rate": llm_error_rate})
+        fig2 = px.line(df_error, x="Date", y=["Overall Error Rate", "LLM Error Rate"], markers=True,
+                    title="Error Rates for Overall and LLM", template="simple_white")
+        st.plotly_chart(fig2)
+########
+#Level-2
+col3, col4, col5 = st.columns(3)
+# Queries Processed Graph
 with col3:
     with st.container(key="col3"):
-        st.subheader("LLM Latency")  
-        fig = px.line(data, x="Date", y="Chat Model Latency", title="Remote Procedure Call Latency")
-        fig.update_layout(plot_bgcolor='white', paper_bgcolor='white', 
-                        margin=dict(l=10, r=10, t=30, b=10),
-                        xaxis=dict(showgrid=False), yaxis=dict(showgrid=False),
-                        font=dict(color='rgba(157, 157, 157, 1)'))
-        st.plotly_chart(fig, use_container_width=True)
+        st.markdown("""
+    <h3 style='color: black; font-family: Poppins, sans-serif;'>Queries Processed Graph</h3>
+""", unsafe_allow_html=True)
+        df_queries = pd.DataFrame({"Date": dates, "Successful Queries": successful_queries, "Failed Queries": failed_queries, "Total Queries": total_queries})
+        fig3 = px.bar(df_queries, x="Date", y=["Successful Queries", "Failed Queries"], barmode='group',
+                    text=df_queries["Total Queries"], title="Queries Processed per Day", template="simple_white")
+        fig3.update_traces(texttemplate='%{text}', textposition='outside')
+        st.plotly_chart(fig3)
 
+# Unique Users Graph
 with col4:
     with st.container(key="col4"):
-        st.subheader("Daily Average Node Latency")
-        fig = px.bar(data, x="Date", y=["Chat Model Latency", "Lookup Latency", "Prompt Latency"],
-                    labels={"value": "Latency (ms)", "variable": "Type"},
-                    title="Comparison of Chat Model, Prompt, and Lookup Latency",
-                    barmode="group",
-                    color_discrete_map={"Chat Model Latency": "blue", "Lookup Latency": "red", "Prompt Latency": "green"})
-        fig.update_layout(plot_bgcolor='white', paper_bgcolor='white', 
-                        margin=dict(l=10, r=10, t=30, b=10),
-                        xaxis=dict(showgrid=False), yaxis=dict(showgrid=False),
-                        font=dict(color='rgba(157, 157, 157, 1)'))
-        st.plotly_chart(fig, use_container_width=True)
+        st.markdown("""
+    <h3 style='color: black; font-family: Poppins, sans-serif;'>Unique Users Graph</h3>
+""", unsafe_allow_html=True)
+        df_users = pd.DataFrame({"Date": dates, "Unique Users": unique_users})
+        fig4 = px.bar(df_users, x="Date", y="Unique Users", title="Unique Users per Day", template="simple_white")
+        st.plotly_chart(fig4)
 
-# Row 3: Request Frequency & Node Latency Trend
-col5, col6 = st.columns(2)
-
+# Chats & Queries per User Graph
 with col5:
     with st.container(key="col5"):
-        st.subheader("Request Frequency")    
-        fig = px.line(data, x="Date", y=["Success Requests", "Failure Requests"],
-                    labels={"value": "Number of Requests", "variable": "Type"},
-                    title="Number of Requests Across Time")
-        fig.update_layout(plot_bgcolor='white', paper_bgcolor='white', 
-                        margin=dict(l=10, r=10, t=30, b=10),
-                        xaxis=dict(showgrid=False), yaxis=dict(showgrid=False),
-                        font=dict(color='rgba(157, 157, 157, 1)'))
-        st.plotly_chart(fig, use_container_width=True)
-
+        st.markdown("""
+    <h3 style='color: black; font-family: Poppins, sans-serif;'>Chats & Queries per User Graph</h3>
+""", unsafe_allow_html=True)
+        df_chats_queries = pd.DataFrame({"Date": dates, "Chats per User": chats_per_user, "Queries per User": queries_per_user})
+        fig5 = px.bar(df_chats_queries, x="Date", y=["Chats per User", "Queries per User"], barmode='group',
+                    title="Chats and Queries per User", template="simple_white")
+        st.plotly_chart(fig5)
+########
+#Level-3
+col6, col7 = st.columns(2)
+# Tokens Processed Graph
 with col6:
     with st.container(key="col6"):
-        st.subheader("Node Latency Trend")
-        fig = px.line(data, x="Date", y="Chat Model Latency", title="Trend of Chat Model, Prompt, and Lookup Latency")
-        fig.update_layout(plot_bgcolor='white', paper_bgcolor='white', 
-                        margin=dict(l=10, r=10, t=30, b=10),
-                        xaxis=dict(showgrid=False), yaxis=dict(showgrid=False),
-                        font=dict(color='rgba(157, 157, 157, 1)'))
-        st.plotly_chart(fig, use_container_width=True)
+        st.markdown("""
+    <h3 style='color: black; font-family: Poppins, sans-serif;'>Tokens Processed Graph</h3>
+""", unsafe_allow_html=True)
+        df_tokens = pd.DataFrame({"Date": dates, "Input Tokens": input_tokens, "Output Tokens": output_tokens, "Embedding Tokens": embedding_tokens})
+        fig6 = px.bar(df_tokens, x="Date", y=["Input Tokens", "Output Tokens", "Embedding Tokens"], barmode='group',
+                    title="Tokens Processed", template="simple_white")
+        st.plotly_chart(fig6)
 
+# Cost Metrics Graph
+with col7:
+    with st.container(key="col7"):
+        st.markdown("""
+    <h3 style='color: black; font-family: Poppins, sans-serif;'>Cost Metrics Graph</h3>
+""", unsafe_allow_html=True)
+        df_cost = pd.DataFrame({"Date": dates, "LLM Cost": llm_cost, "Embedding Cost": embedding_cost, "Total Usage Cost": total_usage_cost})
+        fig7 = px.bar(df_cost, x="Date", y=["LLM Cost", "Embedding Cost"], barmode='group',
+                    title="Cost Metrics per Day", template="simple_white")
+        fig7.add_scatter(x=dates, y=total_usage_cost, mode='lines+markers', name='Total Usage Cost')
+        st.plotly_chart(fig7)
+col8, col9 = st.columns(2)
+# Cost per User Graph
+with col8:
+    with st.container(key="col8"):
+        st.markdown("""
+    <h3 style='color: black; font-family: Poppins, sans-serif;'>Cost per User Graph</h3>
+""", unsafe_allow_html=True)
+        df_cost_user = pd.DataFrame({"Date": dates, "Cost per User": cost_per_user})
+        fig8 = px.bar(df_cost_user, x="Date", y="Cost per User", title="Cost per User per Day", template="simple_white")
+        st.plotly_chart(fig8)
+
+# Cost per Query Graph
+with col9:
+    with st.container(key="col9"):
+        st.markdown("""
+    <h3 style='color: black; font-family: Poppins, sans-serif;'>Cost per Query Graph</h3>
+""", unsafe_allow_html=True)
+        df_cost_query = pd.DataFrame({"Date": dates, "Cost per Query": cost_per_query})
+        fig9 = px.bar(df_cost_query, x="Date", y="Cost per Query", title="Cost per Query per Day", template="simple_white")
+        st.plotly_chart(fig9)
