@@ -1097,3 +1097,25 @@ section[data-testid="stSidebar"] a.vy-sidebar-link:hover {
   margin: 0 auto;
   width: 100% !important;
 }
+
+.st-key-vy-chat-msg-cont-button {
+  max-width: 874px;
+  margin: 0 auto;
+}
+
+.st-key-vy-chat-msg-cont-button > div {
+  max-width: 874px;
+}
+
+.st-key-vy-chat-msg-cont-button [data-testid="stButton"] {
+  max-width: 874px;
+  display: flex;
+  justify-content: flex-end;
+}
+.st-key-vy-chat-msg-cont-button [data-testid="stButton"] > div {
+  max-width: 874px;
+}
+
+.st-key-vy-chat-msg-cont-button [data-testid="stButton"] > div > div {
+  max-width: 874px;
+}

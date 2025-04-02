@@ -99,7 +99,7 @@ if "suggestions" not in st.session_state:
 if "CHAT_ID" not in st.session_state:
     st.session_state.CHAT_ID = ""    
 
-renderSidebar()
+renderSidebar('app')
 
 # Display welcome message if no chat history exists
 if not st.session_state.messages:

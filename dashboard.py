@@ -34,7 +34,7 @@ data = pd.DataFrame({
 # Main Layout
 col1, col2 = st.columns(2)
 
-renderSidebar()
+renderSidebar('dashboard')
 
 # Request Handling Status
 with col1:
