@@ -20,13 +20,6 @@ st.set_page_config(page_title="Review Insights ChatBOT - Login", page_icon="🤖
 
 with open("static/css/login.css") as login_css_file:
     st.html(f"<style>{login_css_file.read()}</style>")
-    
-poppins_light_base64 = get_base64_font("assets/fonts/Poppins/Poppins-Light.ttf")
-poppins_regular_base64 = get_base64_font("assets/fonts/Poppins/Poppins-Regular.ttf")
-poppins_medium_base64 = get_base64_font("assets/fonts/Poppins/Poppins-Medium.ttf")
-poppins_semibold_base64 = get_base64_font("assets/fonts/Poppins/Poppins-SemiBold.ttf")
-poppins_bold_base64 = get_base64_font("assets/fonts/Poppins/Poppins-Bold.ttf")
-poppins_extralight_base64 = get_base64_font("assets/fonts/Poppins/Poppins-ExtraLight.ttf")
 
 st.markdown(
     f"""
