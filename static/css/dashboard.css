@@ -585,13 +585,13 @@ div[class*="st-key-vy-chat-msg-container-thumbs"]
 div[class*="st-key-vy-chat-msg-container-thumbs"]
   [data-testid="stBaseButton-borderlessIcon"]
   > span {
-  border-radius: 25px;
+  border-radius: 100%;
   background: rgba(134, 134, 134, 0.15);
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  height: 24px;
-  width: 24px;
+  height: 35px;
+  width: 35px;
 }
 
 div[class*="st-key-vy-chat-msg-container-thumbs"]
