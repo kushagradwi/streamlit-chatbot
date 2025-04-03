@@ -16,7 +16,12 @@ with open("static/css/dashboard.css") as dashboard_css_file:
 # Header with Timeline Selector
 col1, col2 = st.columns([4, 1])
 with col1:
-    st.title("LLM Ops Dashboard")
+    #st.title("LLM Ops Dashboard")
+    st.markdown("""
+    <h3 style='color: black; font-family: Poppins, sans-serif; font-size: 28px; font-weight: 100;'>
+        <b style='font-weight: 700;'>Analytics - </b>  <span style=' font-weight: 100;'>LLM Ops Dashboard</span>
+    </h3>
+""", unsafe_allow_html=True)
 with col2:
     st.selectbox("Select Time Range", ["Last 30 days", "Last 7 days", "Today"], index=0)
 
@@ -51,7 +56,7 @@ col1, col2 = st.columns(2)
 with col1:
     with st.container(key="col1"):
         st.markdown("""
-    <h3 style='color: black; font-family: Poppins, sans-serif;'>Unique Users Graph</h3>
+    <h3 style='color: black; font-family: Poppins, sans-serif;font-size: 20px;font-weight: 600;'>Latency and Response Time Graph</h3>
 """, unsafe_allow_html=True)
         df_latency = pd.DataFrame({"Date": dates, "RAG Latency": rag_latency, "Response Time": response_time})
         fig1 = px.line(df_latency, x="Date", y=["RAG Latency", "Response Time"], markers=True,
@@ -62,7 +67,7 @@ with col1:
 with col2:
     with st.container(key="col2"):
         st.markdown("""
-    <h3 style='color: black; font-family: Poppins, sans-serif;'>Error Rates Graph</h3>
+    <h3 style='color: black; font-family: Poppins, sans-serif;font-size: 20px;font-weight: 600;'>Error Rates Graph</h3>
 """, unsafe_allow_html=True)
         df_error = pd.DataFrame({"Date": dates, "Overall Error Rate": overall_error_rate, "LLM Error Rate": llm_error_rate})
         fig2 = px.line(df_error, x="Date", y=["Overall Error Rate", "LLM Error Rate"], markers=True,
@@ -75,7 +80,7 @@ col3, col4, col5 = st.columns(3)
 with col3:
     with st.container(key="col3"):
         st.markdown("""
-    <h3 style='color: black; font-family: Poppins, sans-serif;'>Queries Processed Graph</h3>
+    <h3 style='color: black; font-family: Poppins, sans-serif;font-size: 20px;font-weight: 600;'>Queries Processed Graph</h3>
 """, unsafe_allow_html=True)
         df_queries = pd.DataFrame({"Date": dates, "Successful Queries": successful_queries, "Failed Queries": failed_queries, "Total Queries": total_queries})
         fig3 = px.bar(df_queries, x="Date", y=["Successful Queries", "Failed Queries"], barmode='group',
@@ -87,7 +92,7 @@ with col3:
 with col4:
     with st.container(key="col4"):
         st.markdown("""
-    <h3 style='color: black; font-family: Poppins, sans-serif;'>Unique Users Graph</h3>
+    <h3 style='color: black; font-family: Poppins, sans-serif;font-size: 20px;font-weight: 600;'>Unique Users Graph</h3>
 """, unsafe_allow_html=True)
         df_users = pd.DataFrame({"Date": dates, "Unique Users": unique_users})
         fig4 = px.bar(df_users, x="Date", y="Unique Users", title="Unique Users per Day", template="simple_white")
@@ -97,7 +102,7 @@ with col4:
 with col5:
     with st.container(key="col5"):
         st.markdown("""
-    <h3 style='color: black; font-family: Poppins, sans-serif;'>Chats & Queries per User Graph</h3>
+    <h3 style='color: black; font-family: Poppins, sans-serif;font-size: 20px;font-weight: 600;'>Chats & Queries per User Graph</h3>
 """, unsafe_allow_html=True)
         df_chats_queries = pd.DataFrame({"Date": dates, "Chats per User": chats_per_user, "Queries per User": queries_per_user})
         fig5 = px.bar(df_chats_queries, x="Date", y=["Chats per User", "Queries per User"], barmode='group',
@@ -110,7 +115,7 @@ col6, col7 = st.columns(2)
 with col6:
     with st.container(key="col6"):
         st.markdown("""
-    <h3 style='color: black; font-family: Poppins, sans-serif;'>Tokens Processed Graph</h3>
+    <h3 style='color: black; font-family: Poppins, sans-serif;font-size: 20px;font-weight: 600;'>Tokens Processed Graph</h3>
 """, unsafe_allow_html=True)
         df_tokens = pd.DataFrame({"Date": dates, "Input Tokens": input_tokens, "Output Tokens": output_tokens, "Embedding Tokens": embedding_tokens})
         fig6 = px.bar(df_tokens, x="Date", y=["Input Tokens", "Output Tokens", "Embedding Tokens"], barmode='group',
@@ -121,7 +126,7 @@ with col6:
 with col7:
     with st.container(key="col7"):
         st.markdown("""
-    <h3 style='color: black; font-family: Poppins, sans-serif;'>Cost Metrics Graph</h3>
+    <h3 style='color: black; font-family: Poppins, sans-serif;font-size: 20px;font-weight: 600;'>Cost Metrics Graph</h3>
 """, unsafe_allow_html=True)
         df_cost = pd.DataFrame({"Date": dates, "LLM Cost": llm_cost, "Embedding Cost": embedding_cost, "Total Usage Cost": total_usage_cost})
         fig7 = px.bar(df_cost, x="Date", y=["LLM Cost", "Embedding Cost"], barmode='group',
@@ -133,7 +138,7 @@ col8, col9 = st.columns(2)
 with col8:
     with st.container(key="col8"):
         st.markdown("""
-    <h3 style='color: black; font-family: Poppins, sans-serif;'>Cost per User Graph</h3>
+    <h3 style='color: black; font-family: Poppins, sans-serif;font-size: 20px;font-weight: 600;'>Cost per User Graph</h3>
 """, unsafe_allow_html=True)
         df_cost_user = pd.DataFrame({"Date": dates, "Cost per User": cost_per_user})
         fig8 = px.bar(df_cost_user, x="Date", y="Cost per User", title="Cost per User per Day", template="simple_white")
@@ -143,7 +148,7 @@ with col8:
 with col9:
     with st.container(key="col9"):
         st.markdown("""
-    <h3 style='color: black; font-family: Poppins, sans-serif;'>Cost per Query Graph</h3>
+    <h3 style='color: black; font-family: Poppins, sans-serif;font-size: 20px;font-weight: 600;'>Cost per Query Graph</h3>
 """, unsafe_allow_html=True)
         df_cost_query = pd.DataFrame({"Date": dates, "Cost per Query": cost_per_query})
         fig9 = px.bar(df_cost_query, x="Date", y="Cost per Query", title="Cost per Query per Day", template="simple_white")
