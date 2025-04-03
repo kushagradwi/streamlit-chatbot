@@ -95,7 +95,7 @@ with col4:
     <h3 style='color: black; font-family: Poppins, sans-serif;font-size: 20px;font-weight: 600;'>Unique Users Graph</h3>
 """, unsafe_allow_html=True)
         df_users = pd.DataFrame({"Date": dates, "Unique Users": unique_users})
-        fig4 = px.bar(df_users, x="Date", y="Unique Users", title="Unique Users per Day", template="simple_white")
+        fig4 = px.bar(df_users, x="Date", y="Unique Users", title="Unique Users per Day", barmode='group',template="simple_white")
         st.plotly_chart(fig4)
 
 # Chats & Queries per User Graph
