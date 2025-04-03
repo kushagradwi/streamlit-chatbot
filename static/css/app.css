@@ -1111,7 +1111,7 @@ section[data-testid="stSidebar"] a.vy-sidebar-link:hover {
 .st-key-vy-chat-msg-cont-button [data-testid="stButton"] {
   max-width: 874px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 .st-key-vy-chat-msg-cont-button [data-testid="stButton"] > div {
   max-width: 874px;

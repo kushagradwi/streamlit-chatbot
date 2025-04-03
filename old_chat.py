@@ -147,7 +147,7 @@ def continueChat(text):
         with st.chat_message(name="assistant",avatar="assets/sidenav/compas_icon.png"):
             st.markdown('Analyzing...',unsafe_allow_html=True)
     with st.container(key="vy-chat-msg-cont-button"):
-        if st.button("⛔ Stop Generating"):
+        if st.button(label="",icon=":material/thumb_up:"):
             st.session_state.messages.pop()
             st.session_state.messages.pop()
             st.session_state.messages.pop()
