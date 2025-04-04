@@ -435,9 +435,9 @@ div[class*="st-key-vy-chat-msg-container"] .stExpander summary {
   display: inline-flex;
   width: auto;
   border-radius: 12px;
-  border: 1px solid #e3e3e3;
+  border: 2px solid #006ef5;
   gap: 8px;
-  padding: 4px 10px;
+  padding: 6px 12px;
   margin-left: 70px;
 }
 
@@ -626,6 +626,7 @@ div[class*="st-key-vy-chat-msg-container-thumbs"]
   [data-baseweb="button-group"] {
   row-gap: 10px;
   color: #888888;
+  column-gap: 10px;
 }
 
 div[class*="st-key-vy-chat-msg-container-thumbs"]
@@ -1101,7 +1102,6 @@ section[data-testid="stSidebar"] a.vy-sidebar-link:hover {
 
 .st-key-vy-chat-msg-cont-button {
   max-width: 874px;
-  margin: 0 auto;
 }
 
 .st-key-vy-chat-msg-cont-button > div {
@@ -1119,4 +1119,30 @@ section[data-testid="stSidebar"] a.vy-sidebar-link:hover {
 
 .st-key-vy-chat-msg-cont-button [data-testid="stButton"] > div > div {
   max-width: 874px;
+}
+
+.st-key-vy-chat-msg-cont-button [data-testid="stIconMaterial"] {
+  color: #006ef5;
+}
+.st-key-vy-chat-msg-cont-button button > span { 
+  margin: 0;
+}
+.st-key-vy-chat-msg-cont-button button > div { 
+  color: #006ef5;
+}
+.st-key-vy-chat-msg-cont-button button {
+  border-radius: 12px;
+  border: 2px solid #006ef5;
+  gap: 8px;
+  padding: 6px 12px;
+}
+
+.st-key-vy-chat-msg-cont-button button:active [data-testid="stIconMaterial"] {
+  color: #006ef5;
+}
+.st-key-vy-chat-msg-cont-button button:active > div { 
+  color: #006ef5;
+}
+.st-key-vy-chat-msg-cont-button button:active {
+  border: 2px solid #006ef5;
 }
