@@ -64,7 +64,7 @@ with col1:
         info_button("Latency and Response Time Graph","Response Time = Average time between the UI request with the query, and the time till the passing back of the response.\n RAG Latency = Average time taken from the start of query input to the RAG pipeline, till the generation of last token of response.")
         df_latency = pd.DataFrame({"Date": dates, "RAG Latency": rag_latency, "Response Time": response_time})
         fig1 = px.line(df_latency, x="Date", y=["RAG Latency", "Response Time"], markers=True,
-                    title="Latency for RAG and Response Time", template="simple_white")
+                     template="simple_white")
         st.plotly_chart(fig1)
 
 # Error Rates Graph
@@ -73,7 +73,7 @@ with col2:
         info_button("Error Rates Graph","Overall Error Rate = Percentage of total queries from the users that failed. (LLM Errors + API Errors + Network errors + etc.)\n LLM Error Rate = Percentage of total queries from the users that failed, due to LLM response issues. (content violation, llm response structure issues, etc.")
         df_error = pd.DataFrame({"Date": dates, "Overall Error Rate": overall_error_rate, "LLM Error Rate": llm_error_rate})
         fig2 = px.line(df_error, x="Date", y=["Overall Error Rate", "LLM Error Rate"], markers=True,
-                    title="Error Rates for Overall and LLM", template="simple_white")
+                     template="simple_white")
         st.plotly_chart(fig2)
 ########
 #Level-2
@@ -84,7 +84,7 @@ with col3:
         info_button("Queries Processed Graph","Total Queries = The total number of queries across users that were received.\n Successful Queries = The total number of queries across users that were successfully processed. \n Failed Queries = The total number of queries across users that failed.")
         df_queries = pd.DataFrame({"Date": dates, "Successful Queries": successful_queries, "Failed Queries": failed_queries, "Total Queries": total_queries})
         fig3 = px.bar(df_queries, x="Date", y=["Successful Queries", "Failed Queries"], barmode='group',
-                    text=df_queries["Total Queries"], title="Queries Processed per Day", template="simple_white")
+                    text=df_queries["Total Queries"],  template="simple_white")
         fig3.update_traces(texttemplate='%{text}', textposition='outside')
         st.plotly_chart(fig3)
 
@@ -93,7 +93,7 @@ with col4:
     with st.container(key="col4"):
         info_button("Unique Users Graph","Unique Users = Total number of unique User Ids that requested query responses.")
         df_users = pd.DataFrame({"Date": dates, "Unique Users": unique_users})
-        fig4 = px.bar(df_users, x="Date", y="Unique Users", title="Unique Users per Day",template="simple_white")
+        fig4 = px.bar(df_users, x="Date", y="Unique Users", template="simple_white")
         
         fig4.update_traces(width=0.28)
         fig4.update_layout(margin=dict(r=130))
@@ -110,7 +110,7 @@ with col5:
         info_button("Chats & Queries per User Graph"," Chats per user = The average number of chat sessions that were triggered per user. \n Queries per user = The average number of queries requested per user.")
         df_chats_queries = pd.DataFrame({"Date": dates, "Chats per User": chats_per_user, "Queries per User": queries_per_user})
         fig5 = px.bar(df_chats_queries, x="Date", y=["Chats per User", "Queries per User"], barmode='group',
-                    title="Chats and Queries per User", template="simple_white")
+                     template="simple_white")
         st.plotly_chart(fig5)
 ########
 #Level-3
@@ -121,7 +121,7 @@ with col6:
         info_button("Tokens Processed Graph","Input Tokens = The total number of input tokens that were used (prompt tokens) \n Output Tokens = The total number of output tokens that were used (completion tokens) \n Embedding Tokens = The total number of embedding tokens used for semantic similarity")
         df_tokens = pd.DataFrame({"Date": dates, "Input Tokens": input_tokens, "Output Tokens": output_tokens, "Embedding Tokens": embedding_tokens})
         fig6 = px.bar(df_tokens, x="Date", y=["Input Tokens", "Output Tokens", "Embedding Tokens"], barmode='group',
-                    title="Tokens Processed", template="simple_white")
+                     template="simple_white")
         st.plotly_chart(fig6)
 
 # Cost Metrics Graph
@@ -130,7 +130,7 @@ with col7:
         info_button("Cost Metrics Graph","Total Usage Cost = The total usage cost (LLM Cost + Embedding Cost) \n LLM Cost = The total cost incurred for using the LLMs at multiple stages of the RAG pipeline.\n Embedding Cost = The total cost incurred for using the Embedding models at multiple stages of the RAG pipeline.")
         df_cost = pd.DataFrame({"Date": dates, "LLM Cost": llm_cost, "Embedding Cost": embedding_cost, "Total Usage Cost": total_usage_cost})
         fig7 = px.bar(df_cost, x="Date", y=["LLM Cost", "Embedding Cost"], barmode='group',
-                    title="Cost Metrics per Day", template="simple_white")
+                     template="simple_white")
         fig7.add_scatter(x=dates, y=total_usage_cost, mode='lines+markers', name='Total Usage Cost')
         st.plotly_chart(fig7)
 col8, col9 = st.columns(2)
@@ -139,7 +139,7 @@ with col8:
     with st.container(key="col8"):
         info_button("Cost per User Graph","Cost per User = The average overall cost incurred per user")
         df_cost_user = pd.DataFrame({"Date": dates, "Cost per User": cost_per_user})
-        fig8 = px.bar(df_cost_user, x="Date", y="Cost per User", title="Cost per User per Day", template="simple_white")
+        fig8 = px.bar(df_cost_user, x="Date", y="Cost per User",  template="simple_white")
         # Update the trace to include a name for the legend
         fig8.update_traces(name="Cost per USer  per Day", showlegend=True)
 
@@ -154,7 +154,7 @@ with col9:
     with st.container(key="col9"):
         info_button("Cost per Query Graph","Cost per query = The average overall cost incurred per a user query.")
         df_cost_query = pd.DataFrame({"Date": dates, "Cost per Query": cost_per_query})
-        fig9 = px.bar(df_cost_query, x="Date", y="Cost per Query", title="Cost per Query per Day", template="simple_white")
+        fig9 = px.bar(df_cost_query, x="Date", y="Cost per Query", template="simple_white")
         # Update the trace to include a name for the legend
         fig9.update_traces(name="Cost per Query per Day", showlegend=True)
 

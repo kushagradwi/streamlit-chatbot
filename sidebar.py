@@ -1,4 +1,24 @@
 import streamlit as st
+import jwt
+
+# Assuming you have obtained the ID token after successful login
+id_token = st.session_state.get("id_token")
+
+if id_token:
+    try:
+        # Decode the ID token to extract user info
+        decoded_token = jwt.decode(id_token, options={"verify_signature": False})
+
+        # Extract login info from the token
+        username = decoded_token.get("name")
+        email = decoded_token.get("preferred_username")  # Typically the email
+        user_id = decoded_token.get("oid")
+
+
+    except Exception as e:
+        st.error(f"Error decoding token: {e}")
+else:
+    st.warning("User is not logged in")
 
 
 def logout():
@@ -45,25 +65,24 @@ def renderSidebar(active):
         )
         
         with st.container(key="vy-logout-container"):
-            st.markdown("""<div class="vy-profile-container">
-                <img class="vy-profile-image" src="app/static/landing/user-profile.png" alt="user">
-                <div class="vy-profile-info">
-                    <div class="vy-profile-name">
-                        Stephen Johnson
+            st.markdown(f"""
+                <div class="vy-profile-container">
+                    <img class="vy-profile-image" src="app/static/landing/user-profile.png" alt="user">
+                    <div class="vy-profile-info">
+                        <div class="vy-profile-name">
+                            {username}
+                        </div>
+                        <div class="vy-profile-email">
+                            {email}
+                        </div>
                     </div>
-                    <div class="vy-profile-email">
-                        johnson.s@vystarcu.org
+                    <div class="vy-profile-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="4" height="14" viewBox="0 0 4 14" fill="none">
+                            <path d="M1 7H3M1 1H3M1 13H3" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
                     </div>
                 </div>
-                <div class="vy-profile-icon"><svg xmlns="http://www.w3.org/2000/svg" width="4" height="14" viewBox="0 0 4 14"
-                        fill="none">
-                        <path d="M1 7H3M1 1H3M1 13H3" stroke="white" stroke-width="2" stroke-linecap="round"
-                            stroke-linejoin="round" />
-                    </svg></div>
-            </div>"""
-                        ,
-            unsafe_allow_html=True
-            ) 
+                """, unsafe_allow_html=True)
             with st.popover(label="", use_container_width=True):
                 logoutButton=st.button(label="Logout", icon=":material/logout:")
 
