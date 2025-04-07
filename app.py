@@ -9,6 +9,7 @@ from api_helper import get_api_call_with_cookie, post_api_call_with_cookie
 import os
 from dotenv import load_dotenv
 from sidebar import renderSidebar
+from Azure_SSO import azure_sso_handler
 
 load_dotenv()
 
@@ -55,7 +56,8 @@ def continueChat(text):
 
 
 st.set_page_config(layout="wide", initial_sidebar_state="collapsed")
-
+azure_sso_handler()
+st.write("user details:",st.experimental_user)
 with open("static/css/sidebar.css") as css_file:
     st.html(f"<style>{css_file.read()}</style>")
 
