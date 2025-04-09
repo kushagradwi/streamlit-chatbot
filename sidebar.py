@@ -7,8 +7,15 @@ def logout():
     st.session_state.logged_in = False
     st.session_state.redirect = True
     st.rerun()
-
+if not st.experimental_user.is_logged_in:
+    st.switch_page("login.py")
+    
 def renderSidebar(active):
+    uemail = ""
+    if "email" not in st.experimental_user:
+        uemail = st.experimental_user.name.replace(" ", "_")
+    else:    
+        uemail = st.experimental_user.email
     with st.sidebar:
         st.markdown("""<div class="welcome-wrap">
                     <div class="welcome-wrap-text-upper">
@@ -45,14 +52,14 @@ def renderSidebar(active):
         )
         
         with st.container(key="vy-logout-container"):
-            st.markdown("""<div class="vy-profile-container">
+            st.markdown(f"""<div class="vy-profile-container">
                 <img class="vy-profile-image" src="app/static/landing/user-profile.png" alt="user">
                 <div class="vy-profile-info">
                     <div class="vy-profile-name">
-                        Stephen Johnson
+                        {st.experimental_user.name}
                     </div>
                     <div class="vy-profile-email">
-                        johnson.s@vystarcu.org
+                        {uemail}
                     </div>
                 </div>
                 <div class="vy-profile-icon"><svg xmlns="http://www.w3.org/2000/svg" width="4" height="14" viewBox="0 0 4 14"
@@ -68,7 +75,7 @@ def renderSidebar(active):
                 logoutButton=st.button(label="Logout", icon=":material/logout:")
 
         if logoutButton:
-            logout()
+            st.logout()
 
         st.markdown("""<div class="vy-sidenav-footer">
                 <div class="vy-sidenav-footer-text" >Powered by</div>

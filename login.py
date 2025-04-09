@@ -30,20 +30,15 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-if "authenticated" not in st.session_state:
-    st.session_state["authenticated"] = False
-
-if not st.session_state["authenticated"]:
+if not st.experimental_user.is_logged_in:
     st.markdown('<div class="login-title-container"><div class="login-title">Review Insights<br>ChatBOT</div></div>', unsafe_allow_html=True)
     st.markdown('<div class="login-subtitle-container"><div class="login-subtitle">Sign in using Microsoft credentials</div></div>', unsafe_allow_html=True)
 
     # if st.button("SIGN IN", key="microsoft-sign-in"):
         # mock_microsoft_sso()
         #azure_sso_handler()
-    if st.button("Log in with Microsoft"):
-            st.login()
-    st.stop()
-
+    if st.button("SIGN IN", key="microsoft-sign-in"):
+        st.login()
 
     st.markdown('<div class="footer"><div class= "footer-text" style="width: 381.65px; text-align: center; color: white; font-size: 10px; font-family: Poppins; font-weight: 400; word-wrap: break-word">© 2025 Vystar, Incorporated and its Affiliates. All Rights Reserved</div></div>', unsafe_allow_html=True)
 

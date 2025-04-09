@@ -43,7 +43,6 @@ def azure_sso_handler():
     if "code" in query_params:
         auth_code = query_params["code"]
         token_data = get_token_from_code(auth_code)
-        print(token_data)
         if "access_token" in token_data:
             st.session_state["authenticated"] = True
             st.session_state["user"] = "Microsoft User"

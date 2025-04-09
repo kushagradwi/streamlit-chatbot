@@ -10,6 +10,13 @@ from sidebar import renderSidebar
 
 load_dotenv()
 
+uemail = ""
+
+if "email" not in st.experimental_user:
+    uemail = st.experimental_user.name.replace(" ", "_")
+else:    
+    uemail = st.experimental_user.email
+
 BASE_URL=os.getenv("BASE_URL")
 DISCLAIMER_ENDPOINT=os.getenv("DISCLAIMER_ENDPOINT")
 NEW_CHAT_ENDPOINT=os.getenv("NEW_CHAT_ENDPOINT")
@@ -35,29 +42,15 @@ def logout():
     st.session_state.redirect = True
     st.rerun()
 
-def newChat():
-    st.session_state.messages = []  # Clear chat history
-    st.session_state.suggestions = []
-    st.session_state.logged_in = True
-    #call new chat API
-    url = f"{BASE_URL}{NEW_CHAT_ENDPOINT}"
-    response = post_api_call_with_cookie(url)
-    print("Response :",response)
-    if isinstance(response, dict) and "user_chat_id" in response:
-        st.session_state.CHAT_ID = response.get("user_chat_id", "")
-        #st.session_state.USER_ID = response.get("user_id", "")  # Store user_id
-    else:
-        st.error("Failed to create new chat.")
-    st.rerun()
 
 # Function to send feedback using post_api_call_with_cookie
-def sendFeedback(helpful):
+def sendFeedback(helpful,message):
     url = f"{BASE_URL}{RECORD_FEEDBACK_ENDPOINT}"
     payload = json.dumps({
-        "user_id": "user-1",
-        "user_chat_id": "user-1_chat2",
-        "query_id": "query_1234",
-        "response_id": "response_1234",
+        "user_id": uemail,
+        "user_chat_id": st.session_state.CHAT_ID,
+        "query_id": message["query_id"],
+        "response_id": message["response_id"],
         "helpful": helpful
     })
     headers = {
@@ -75,8 +68,8 @@ def sendFeedback(helpful):
 def apichat(text):
     try:
         url = BASE_URL+ CHAT_RESPONSE_ENDPOINT  # Use the endpoint from .env
-        user_chat_id = "user-1-chat1"
-        user_id = "user-1"  # Retrieve user_id
+        user_chat_id = st.session_state.CHAT_ID        
+        user_id = uemail
 
         if not user_id:
             st.error("User ID is missing.")
@@ -163,7 +156,7 @@ def continueChat(text):
     
     # Get chatbot response
     res = apichat(text)
-    
+    print("res",res)
     # Error handling in case API response fails
     if (res is None) or ("response_txt" not in res.keys()) or (res["response_txt"] is None) :
         print("Error occured")
@@ -181,7 +174,9 @@ def continueChat(text):
         "role": "assistant", 
         "content": res["response_txt"], 
         "source": res.get("cited_reviews", ""), 
-        "id": len(st.session_state.messages)
+        "id": len(st.session_state.messages),
+        "query_id": res.get("query_id",),
+        "response_id": res.get("response_id")
     }
     
     # Update session state with suggestions if available
@@ -276,10 +271,11 @@ with st.container(key="vy-chat-msg-container"):
                 with st.container(key=f"vy-chat-msg-container-thumbs-{message['id']}"):
                     selected = st.feedback("thumbs",key=f"{message['id']}-thumbs")
                     if selected is not None:
-                        if selected == "thumbsUp":
-                            sendFeedback(True)  # Call sendFeedback with True for thumbs-up
+                        print("Selected - ", selected)
+                        if selected == 1:
+                            sendFeedback(True,message)  # Call sendFeedback with True for thumbs-up
                         else:  # This covers the case where selected == "thumbsDown"
-                            sendFeedback(False)  # Call sendFeedback with False for thumbs-down
+                            sendFeedback(False,message)  # Call sendFeedback with False for thumbs-down
 
     # if st.session_state.suggestions:
     #     with st.container(key="vy-suggestion-state"):
