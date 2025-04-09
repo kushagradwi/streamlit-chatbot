@@ -237,6 +237,11 @@ if "CHAT_ID" not in st.session_state:
 # Sidebar with logout button
 renderSidebar('app')    
 
+def feedbackChanged():
+    if st.session_state.current_message:
+        st.session_state.messages.pop()
+        st.session_state.messages.pop()
+
 # Display chat messages from history on app rerun
 with st.container(key="vy-chat-msg-container"):
     for message in st.session_state.messages:
@@ -269,13 +274,14 @@ with st.container(key="vy-chat-msg-container"):
             sentiment_mapping = [":material/thumb_down:", ":material/thumb_up:"]
             if "source" in message.keys() and message["source"]:
                 with st.container(key=f"vy-chat-msg-container-thumbs-{message['id']}"):
-                    selected = st.feedback("thumbs",key=f"{message['id']}-thumbs")
+                    selected = st.feedback("thumbs",key=f"{message['id']}-thumbs",on_change=feedbackChanged)
                     if selected is not None:
                         print("Selected - ", selected)
                         if selected == 1:
                             sendFeedback(True,message)  # Call sendFeedback with True for thumbs-up
                         else:  # This covers the case where selected == "thumbsDown"
                             sendFeedback(False,message)  # Call sendFeedback with False for thumbs-down
+
 
     # if st.session_state.suggestions:
     #     with st.container(key="vy-suggestion-state"):
