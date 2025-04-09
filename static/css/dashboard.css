@@ -924,6 +924,7 @@ section[data-testid="stSidebar"] a.vy-sidebar-link:hover {
   padding: 0;
   border: 0px;
   border-radius: 0;
+  box-shadow: none;
 }
 [data-testid="stPopoverBody"] .st-ak {
   background-color: transparent;

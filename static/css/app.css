@@ -773,6 +773,10 @@ div[class*="st-key-vy-chat-msg-container-thumbs"]
   top: 100%;
 }
 
+.st-key-vy-chat-input-up [data-baseweb="base-input"] {
+  background: #fefefe;
+}
+
 [data-testid="stBottom"] [data-baseweb="base-input"] {
   background: #fefefe;
 }
@@ -925,6 +929,7 @@ section[data-testid="stSidebar"] a.vy-sidebar-link:hover {
   padding: 0;
   border: 0px;
   border-radius: 0;
+  box-shadow: none;
 }
 [data-testid="stPopoverBody"] .st-ak {
   background-color: transparent;
@@ -1124,10 +1129,10 @@ section[data-testid="stSidebar"] a.vy-sidebar-link:hover {
 .st-key-vy-chat-msg-cont-button [data-testid="stIconMaterial"] {
   color: #006ef5;
 }
-.st-key-vy-chat-msg-cont-button button > span { 
+.st-key-vy-chat-msg-cont-button button > span {
   margin: 0;
 }
-.st-key-vy-chat-msg-cont-button button > div { 
+.st-key-vy-chat-msg-cont-button button > div {
   color: #006ef5;
 }
 .st-key-vy-chat-msg-cont-button button {
@@ -1140,7 +1145,7 @@ section[data-testid="stSidebar"] a.vy-sidebar-link:hover {
 .st-key-vy-chat-msg-cont-button button:active [data-testid="stIconMaterial"] {
   color: #006ef5;
 }
-.st-key-vy-chat-msg-cont-button button:active > div { 
+.st-key-vy-chat-msg-cont-button button:active > div {
   color: #006ef5;
 }
 .st-key-vy-chat-msg-cont-button button:active {
