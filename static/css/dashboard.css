@@ -37,6 +37,11 @@ html,
 [data-testid="stMainBlockContainer"] {
   padding: 9px 25px 20px;
 }
+[data-testid="stMainBlockContainer"] > div > div > div[data-testid="stVerticalBlock"] {
+   
+    gap: 40px;
+  
+}
 .info-box-wrap {
   margin-top: 123px;
   display: flex;
@@ -415,10 +420,7 @@ div[class*="st-key-vy-chat-msg-container"] [data-testid="stChatMessage"] {
   padding-bottom: 0;
 }
 
-[data-testid="stChatMessage"] [data-testid="stVerticalBlock"] {
-  width: auto;
-  flex-grow: 0;
-}
+
 
 [data-testid="stChatMessage"] > img {
   margin-top: 10px;
