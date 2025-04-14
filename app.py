@@ -5,10 +5,13 @@ import json
 from PIL import Image
 import streamlit.components.v1 as components
 import requests
-from api_helper import get_api_call_with_cookie, post_api_call_with_cookie
 import os
 from dotenv import load_dotenv
 from sidebar import renderSidebar
+import requests
+from databricks import sdk
+
+cfg = sdk.config.Config()
 
 load_dotenv()
 
@@ -30,21 +33,39 @@ def get_base64_image(path):
 
 menu_icon_base64 = get_base64_image("assets/sidenav/menu_icon.png")
 compass_icon_base64 = get_base64_image("assets/sidenav/compas_icon.png")
+uemail = ""
+
+if "email" not in st.experimental_user:
+    uemail = st.experimental_user.name.replace(" ", "_")
+else:    
+    uemail = st.experimental_user.email
 
 def newChat():
     st.session_state.messages = []  # Clear chat history
     st.session_state.suggestions = []
     st.session_state.logged_in = True
     #call new chat API
-    url = f"{BASE_URL}{NEW_CHAT_ENDPOINT}"
-    response = post_api_call_with_cookie(url)
-    print("Response :",response)
-    if isinstance(response, dict) and "user_chat_id" in response:
-        st.session_state.CHAT_ID = response.get("user_chat_id", "")
+    url = f"{BASE_URL}{NEW_CHAT_ENDPOINT}?user_id={uemail}"
+    headers = {
+        "accept": "application/json",
+        "api-key": "884c0b4e-ecc2-44a7-bbbd-39835aec2518",
+        "Content-Type": "application/json"
+    }
+    headers.update(cfg.authenticate())
+    response = requests.post(url, headers=headers)
+    
+    if response.status_code == 200:
+        resp= response.json()
+    else:
+        resp= None 
+
+    print("Response :",response.json())
+    if isinstance(resp, dict) and "user_chat_id" in resp:
+        st.session_state.CHAT_ID = resp.get("user_chat_id", "")
         #st.session_state.USER_ID = response.get("user_id", "")  # Store user_id
     else:
         st.error("Failed to create new chat.")
-    st.rerun()
+ 
 
 def continueChat(text):
     if not text:
@@ -55,7 +76,7 @@ def continueChat(text):
 
 
 st.set_page_config(layout="wide", initial_sidebar_state="collapsed")
-
+newChat()
 with open("static/css/sidebar.css") as css_file:
     st.html(f"<style>{css_file.read()}</style>")
 

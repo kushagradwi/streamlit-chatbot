@@ -1,0 +1,62 @@
+trigger:
+  branches:
+    include:
+      - main  
+
+pool:
+  vmImage: 'ubuntu-latest'  
+
+variables:
+  - group: AAG_Chatbot_Vars  
+
+  - name: DATABRICKS_HOST
+    value: "https://adb-1970155331536418.18.azuredatabricks.net"
+
+  - name: DATABRICKS_REPO_ID
+    value: "3767985430450196"
+   
+  - name: DATABRICKS_JOB_ID
+    value: "175cdff2-95b4-4861-9151-53ac586243ce"
+
+stages:
+- stage: Sync_Databricks
+  displayName: "Sync Databricks Repo and Restart Job"
+
+  jobs:
+  - job: UpdateDatabricksRepo
+    displayName: "Update Databricks Repo and Restart Job"
+
+    steps:
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '3.x'
+     
+      - script: |
+          pip install databricks-cli --upgrade
+          databricks --version
+        displayName: 'Install Databricks CLI'
+
+        env:
+          DATABRICKS_HOST: $(DATABRICKS_HOST)
+          DATABRICKS_TOKEN: $(DATABRICKS_TOKEN)
+
+      - script: |
+          # Pull the latest code from main branch to Databricks repo
+          databricks repos update --repo-id $(DATABRICKS_REPO_ID) --branch main
+        displayName: 'Update Databricks Repo with Latest Code'
+
+        env:
+          DATABRICKS_HOST: $(DATABRICKS_HOST)
+          DATABRICKS_TOKEN: $(DATABRICKS_TOKEN)
+
+
+# App sync is in public preview
+
+      # - script: |
+      #     # Restart the Databricks job to apply the latest code
+      #     databricks jobs run-now --job-id $(DATABRICKS_JOB_ID)
+      #   displayName: 'Restart Databricks Job to Apply Latest Code'
+
+      #   env:
+      #     DATABRICKS_HOST: $(DATABRICKS_HOST)
+      #     DATABRICKS_TOKEN: $(DATABRICKS_TOKEN)

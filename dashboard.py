@@ -28,7 +28,7 @@ with col1:
 """, unsafe_allow_html=True)
     
 with col2:
-    selected_range= st.selectbox("Select Time Range", ["Last 30 days", "Last 7 days", "Today"], index=0)
+    selected_range= st.selectbox("Select Time Range", ["Last 30 days", "Last 7 days"], index=1)
 
 renderSidebar('dashboard')
 
@@ -39,8 +39,7 @@ if selected_range == "Last 30 days":
     start_date = (today - timedelta(days=30)).strftime("%Y-%m-%d")
 elif selected_range == "Last 7 days":
     start_date = (today - timedelta(days=7)).strftime("%Y-%m-%d")
-else:  # "Today"
-    start_date = today.strftime("%Y-%m-%d")
+
 
 end_date = today.strftime("%Y-%m-%d")
 
@@ -48,7 +47,7 @@ end_date = today.strftime("%Y-%m-%d")
 # end_date = "2025-03-07"
 
 metrics = fetch_dashboard_metrics(start_date, end_date)
-
+print("metrics :",metrics)
 
 # Unpack metrics
 dates = metrics["dates"]
@@ -80,7 +79,7 @@ with col1:
 
     with st.container(key="col1"):
          
-        info_button("Latency and Response Time Graph","<b>Response Time:</b> Avg. time from UI query to response delivery.<br><b>RAG Latency:</b> Avg. time from RAG start to final token generation.")
+        info_button("Latency and Response Time","<b>Response Time:</b> Avg. time from UI query to response delivery.<br><b>RAG Latency:</b> Avg. time from RAG start to final token generation.")
         df_latency = pd.DataFrame({"Date": dates, "RAG Latency": rag_latency, "Response Time": response_time})
         fig1 = px.line(df_latency, x="Date", y=["RAG Latency", "Response Time"], markers=True,
                      template="simple_white")
@@ -95,7 +94,7 @@ with col1:
 with col2:
     with st.container(key="col2"):
         info_button(
-            "Error Rates Graph",
+            "Error Rates",
             "<b>Overall Error Rate:</b> % of total queries that failed (any reason).<br><b>LLM Error Rate:</b> % of queries failed due to LLM issues (e.g., content violations, malformed output).")
         df_error = pd.DataFrame({"Date": dates, "Overall Error Rate": overall_error_rate, "LLM Error Rate": llm_error_rate})
         fig2 = px.line(df_error, x="Date", y=["Overall Error Rate", "LLM Error Rate"], markers=True,
@@ -114,14 +113,12 @@ col3, col4, col5 = st.columns(3)
 with col3:
     with st.container(key="col3"):
         info_button(
-    "Queries Processed Graph",
+    "Queries Processed",
     "<b>Total Queries:</b> All queries received.<br><b>Successful Queries:</b> Queries processed without errors.<br><b>Failed Queries:</b> Queries that encountered errors."
 )
 
         df_queries = pd.DataFrame({"Date": dates, "Successful Queries": successful_queries, "Failed Queries": failed_queries, "Total Queries": total_queries})
-        fig3 = px.bar(df_queries, x="Date", y=["Successful Queries", "Failed Queries"], barmode='group',
-                    text=df_queries["Total Queries"],  template="simple_white")
-        fig3.update_traces(texttemplate='%{text}', textposition='outside')
+        fig3 = px.bar(df_queries, x="Date", y=["Successful Queries", "Failed Queries"], barmode='group',  template="simple_white")
         fig3.update_layout(margin=dict(r=200))
         fig3.update_layout(
         xaxis=dict(showgrid=True),
@@ -132,7 +129,7 @@ with col3:
 # Unique Users Graph
 with col4:
     with st.container(key="col4"):
-        info_button("Unique Users Graph","<b>Unique Users :</b> Total number of unique User Ids that requested query responses.")
+        info_button("Unique Users","<b>Unique Users :</b> Total number of unique User Ids that requested query responses.")
         df_users = pd.DataFrame({"Date": dates, "Unique Users": unique_users})
         fig4 = px.bar(df_users, x="Date", y="Unique Users", template="simple_white")
         
@@ -153,7 +150,7 @@ with col4:
 with col5:
     with st.container(key="col5"):
         info_button(
-    "Chats & Queries per User Graph",
+    "Chats & Queries per User",
     "<b>Unique Users:</b> Count of distinct users.<br><b>Chats per User:</b> Avg. number of chat sessions per user.<br><b>Queries per User:</b> Avg. queries submitted per user."
 )
 
@@ -173,7 +170,7 @@ col6, col7 = st.columns(2)
 with col6:
     with st.container(key="col6"):
         info_button(
-    "Tokens Processed Graph",
+    "Tokens Processed",
     "<b>Input Tokens:</b> Prompt tokens used.<br><b>Output Tokens:</b> Completion tokens generated."
 )
 
@@ -192,7 +189,7 @@ with col6:
 with col7:
     with st.container(key="col7"):
         info_button(
-    "Cost Metrics Graph",
+    "Cost Metrics",
     "<b>LLM Cost:</b> Total spend on LLM usage.<br><b>Embedding Cost:</b> Total spend on embedding models.<br><b>Total Cost:</b> Combined LLM + Embedding cost."
 )
 
@@ -204,7 +201,8 @@ with col7:
         fig7.update_layout(margin=dict(r=200))
         fig7.update_layout(
         xaxis=dict(showgrid=True),
-        yaxis=dict(showgrid=True)
+        yaxis=dict(showgrid=True),
+        yaxis_title="DBU"
         )
         st.plotly_chart(fig7)   
 
@@ -214,7 +212,7 @@ col8, col9 = st.columns(2)
 # Cost per User Graph
 with col8:
     with st.container(key="col8"):
-        info_button("Cost per User Graph","<b>Cost per User:</b> Avg. spend per user.")
+        info_button("Cost per User","<b>Cost per User:</b> Avg. spend per user.<br><b>Cost per User:</b> (Total Usage Cost / Number of Queries)")
         df_cost_user = pd.DataFrame({"Date": dates, "Cost per User": cost_per_user})
         fig8 = px.bar(df_cost_user, x="Date", y="Cost per User",  template="simple_white")
         # Update the trace to include a name for the legend
@@ -226,14 +224,15 @@ with col8:
         fig8.update_layout(margin=dict(r=200))
         fig8.update_layout(
         xaxis=dict(showgrid=True),
-        yaxis=dict(showgrid=True)
+        yaxis=dict(showgrid=True),
+        yaxis_title="DBU"
         )
         st.plotly_chart(fig8)
 
 # Cost per Query Graph
 with col9:
     with st.container(key="col9"):
-        info_button("Cost per Query Graph","<b>Cost per Query:</b> Avg. spend per query.")
+        info_button("Cost per Query","<b>Cost per Query:</b> Avg. spend per query.<br><b>Cost per Query:</b> (Total Usage Cost / Number of Queries)")
         df_cost_query = pd.DataFrame({"Date": dates, "Cost per Query": cost_per_query})
         fig9 = px.bar(df_cost_query, x="Date", y="Cost per Query", template="simple_white")
         # Update the trace to include a name for the legend
@@ -245,6 +244,7 @@ with col9:
         fig9.update_layout(margin=dict(r=200))
         fig9.update_layout(
         xaxis=dict(showgrid=True),
-        yaxis=dict(showgrid=True)
+        yaxis=dict(showgrid=True),
+        yaxis_title="DBU"
         )
         st.plotly_chart(fig9)

@@ -1,4 +1,5 @@
-streamlit
+streamlit==1.44.0
 pillow
 plotly
 jwt
+Authlib
